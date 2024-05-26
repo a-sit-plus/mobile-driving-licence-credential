@@ -1,7 +1,6 @@
 package at.asitplus.wallet.mdl
 
 import at.asitplus.crypto.datatypes.jws.JwsSigned
-import at.asitplus.wallet.lib.data.ConstantIndex
 import at.asitplus.wallet.lib.iso.ServerRequest
 import at.asitplus.wallet.lib.iso.ServerResponse
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
@@ -15,7 +14,6 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.LocalDate
 
 class JsonSerializationTest : FreeSpec({
@@ -147,7 +145,7 @@ class JsonSerializationTest : FreeSpec({
         val mdlJws = MobileDrivingLicenceJws.deserialize(jws.payload.decodeToString()).getOrThrow().shouldNotBeNull()
         println(mdlJws)
 
-        mdlJws.doctype shouldBe ConstantIndex.MobileDrivingLicence2023.isoDocType
+        mdlJws.doctype shouldBe MobileDrivingLicenceScheme.isoDocType
         val mdl = mdlJws.namespaces.mdl
         mdl.familyName shouldBe "Doe"
         mdl.givenName shouldBe "Jane"
