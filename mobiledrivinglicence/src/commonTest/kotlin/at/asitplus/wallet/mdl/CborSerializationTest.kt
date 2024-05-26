@@ -1,26 +1,32 @@
-package at.asitplus.wallet.lib.iso
+package at.asitplus.wallet.mdl
 
 import at.asitplus.crypto.datatypes.cose.CoseSigned
-import at.asitplus.wallet.lib.data.ConstantIndex
 import at.asitplus.wallet.lib.data.jsonSerializer
+import at.asitplus.wallet.lib.iso.DeviceRequest
+import at.asitplus.wallet.lib.iso.DeviceResponse
+import at.asitplus.wallet.lib.iso.IssuerSignedItem
+import at.asitplus.wallet.lib.iso.IssuerSignedList
+import at.asitplus.wallet.lib.iso.ItemsRequestList
 import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.EXPIRY_DATE
 import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.PORTRAIT
+import at.asitplus.wallet.lib.iso.MobileSecurityObject
+import at.asitplus.wallet.lib.iso.ValueDigestList
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.ktor.utils.io.core.*
 import io.matthewnelson.encoding.base16.Base16
 import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.encodeToString
+import kotlin.random.Random
 
 class CborSerializationTest : FreeSpec({
 
@@ -35,7 +41,7 @@ class CborSerializationTest : FreeSpec({
             issuingCountry = "AT",
             issuingAuthority = "LPD Steiermark",
             licenceNumber = "A/3f984/019",
-            portrait = "foo".toByteArray(),
+            portrait = Random.nextBytes(16),
             drivingPrivileges = listOf(
                 DrivingPrivilege(
                     vehicleCategoryCode = "A",
@@ -66,7 +72,7 @@ class CborSerializationTest : FreeSpec({
             issuingCountry = "AT",
             issuingAuthority = "LPD Steiermark",
             licenceNumber = "A/3f984/019",
-            portrait = "foo".toByteArray(),
+            portrait = Random.nextBytes(16),
             drivingPrivileges = listOf(
                 DrivingPrivilege(
                     vehicleCategoryCode = "A",
@@ -141,9 +147,8 @@ class CborSerializationTest : FreeSpec({
         val docRequest = deviceRequest.docRequests.first()
         docRequest.shouldNotBeNull()
 
-        docRequest.itemsRequest.value.docType shouldBe ConstantIndex.MobileDrivingLicence2023.isoDocType
-        val itemsRequestList =
-            docRequest.itemsRequest.value.namespaces[ConstantIndex.MobileDrivingLicence2023.isoNamespace]
+        docRequest.itemsRequest.value.docType shouldBe MobileDrivingLicenceScheme.isoDocType
+        val itemsRequestList = docRequest.itemsRequest.value.namespaces[MobileDrivingLicenceScheme.isoNamespace]
         itemsRequestList.shouldNotBeNull()
         itemsRequestList.findItem(FAMILY_NAME) shouldBe true
         itemsRequestList.findItem(DOCUMENT_NUMBER) shouldBe true
@@ -329,9 +334,8 @@ class CborSerializationTest : FreeSpec({
         deviceResponse.version shouldBe "1.0"
         val document = deviceResponse.documents?.get(0)
         document.shouldNotBeNull()
-        document.docType shouldBe ConstantIndex.MobileDrivingLicence2023.isoDocType
-        val issuerSignedList =
-            document.issuerSigned.namespaces?.get(ConstantIndex.MobileDrivingLicence2023.isoNamespace)
+        document.docType shouldBe MobileDrivingLicenceScheme.isoDocType
+        val issuerSignedList = document.issuerSigned.namespaces?.get(MobileDrivingLicenceScheme.isoNamespace)
         issuerSignedList.shouldNotBeNull()
         issuerSignedList.findItem(0U).elementIdentifier shouldBe FAMILY_NAME
         issuerSignedList.findItem(0U).elementValue shouldBe "Doe"
@@ -360,17 +364,17 @@ class CborSerializationTest : FreeSpec({
         mso.shouldNotBeNull()
         mso.version shouldBe "1.0"
         mso.digestAlgorithm shouldBe "SHA-256"
-        mso.docType shouldBe ConstantIndex.MobileDrivingLicence2023.isoDocType
+        mso.docType shouldBe MobileDrivingLicenceScheme.isoDocType
         mso.validityInfo.signed shouldBe Instant.parse("2020-10-01T13:30:02Z")
         mso.validityInfo.validFrom shouldBe Instant.parse("2020-10-01T13:30:02Z")
         mso.validityInfo.validUntil shouldBe Instant.parse("2021-10-01T13:30:02Z")
-        val valueDigestList = mso.valueDigests[ConstantIndex.MobileDrivingLicence2023.isoNamespace]
+        val valueDigestList = mso.valueDigests[MobileDrivingLicenceScheme.isoNamespace]
         valueDigestList.shouldNotBeNull()
         valueDigestList.findItem(0U) shouldBe "75167333B47B6C2BFB86ECCC1F438CF57AF055371AC55E1E359E20F254ADCEBF"
             .decodeToByteArray(Base16(strict = true))
         valueDigestList.findItem(1U) shouldBe "67E539D6139EBD131AEF441B445645DD831B2B375B390CA5EF6279B205ED4571"
             .decodeToByteArray(Base16(strict = true))
-        val valueDigestListUs = mso.valueDigests["${ConstantIndex.MobileDrivingLicence2023.isoNamespace}.US"]
+        val valueDigestListUs = mso.valueDigests["${MobileDrivingLicenceScheme.isoNamespace}.US"]
         valueDigestListUs.shouldNotBeNull()
         valueDigestListUs.findItem(0U) shouldBe "D80B83D25173C484C5640610FF1A31C949C1D934BF4CF7F18D5223B15DD4F21C"
             .decodeToByteArray(Base16(strict = true))
@@ -601,7 +605,7 @@ class CborSerializationTest : FreeSpec({
             044b890ad85aa53f129134775d733754d7cb7a413766aeff13cb2e
         """.trimIndent().replace("\n", "").uppercase()
 
-        val coseSigned = CoseSigned.deserialize(input.decodeToByteArray(Base16(strict = true))).getOrThrow()
+        val coseSigned = CoseSigned.deserialize(input.decodeToByteArray(Base16(strict = true))).shouldNotBeNull()
         println(coseSigned)
 
         val payload = coseSigned.payload
@@ -610,17 +614,17 @@ class CborSerializationTest : FreeSpec({
         println(mso)
         mso.version shouldBe "1.0"
         mso.digestAlgorithm shouldBe "SHA-256"
-        mso.docType shouldBe ConstantIndex.MobileDrivingLicence2023.isoDocType
+        mso.docType shouldBe MobileDrivingLicenceScheme.isoDocType
         mso.validityInfo.signed shouldBe Instant.parse("2020-10-01T13:30:02Z")
         mso.validityInfo.validFrom shouldBe Instant.parse("2020-10-01T13:30:02Z")
         mso.validityInfo.validUntil shouldBe Instant.parse("2021-10-01T13:30:02Z")
-        val valueDigestList = mso.valueDigests[ConstantIndex.MobileDrivingLicence2023.isoNamespace]
+        val valueDigestList = mso.valueDigests[MobileDrivingLicenceScheme.isoNamespace]
         valueDigestList.shouldNotBeNull()
         valueDigestList.findItem(0U) shouldBe "75167333B47B6C2BFB86ECCC1F438CF57AF055371AC55E1E359E20F254ADCEBF"
             .decodeToByteArray(Base16(strict = true))
         valueDigestList.findItem(1U) shouldBe "67E539D6139EBD131AEF441B445645DD831B2B375B390CA5EF6279B205ED4571"
             .decodeToByteArray(Base16(strict = true))
-        val valueDigestListUs = mso.valueDigests["${ConstantIndex.MobileDrivingLicence2023.isoNamespace}.US"]
+        val valueDigestListUs = mso.valueDigests["${MobileDrivingLicenceScheme.isoNamespace}.US"]
         valueDigestListUs.shouldNotBeNull()
         valueDigestListUs.findItem(0U) shouldBe "D80B83D25173C484C5640610FF1A31C949C1D934BF4CF7F18D5223B15DD4F21C"
             .decodeToByteArray(Base16(strict = true))

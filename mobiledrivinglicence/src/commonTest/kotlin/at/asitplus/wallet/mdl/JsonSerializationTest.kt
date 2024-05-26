@@ -1,18 +1,21 @@
-package at.asitplus.wallet.lib.iso
+package at.asitplus.wallet.mdl
 
 import at.asitplus.crypto.datatypes.jws.JwsSigned
 import at.asitplus.wallet.lib.data.ConstantIndex
-import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
-import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
-import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.EXPIRY_DATE
-import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.FAMILY_NAME
-import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.ISSUE_DATE
-import at.asitplus.wallet.lib.iso.MobileDrivingLicenceDataElements.PORTRAIT
+import at.asitplus.wallet.lib.iso.ServerRequest
+import at.asitplus.wallet.lib.iso.ServerResponse
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlinx.datetime.LocalDate
 
 class JsonSerializationTest : FreeSpec({
@@ -45,8 +48,8 @@ class JsonSerializationTest : FreeSpec({
 
         serverRequest.version shouldBe "1.0"
         val docRequest = serverRequest.docRequests[0]
-        docRequest.docType shouldBe ConstantIndex.MobileDrivingLicence2023.isoDocType
-        val itemRequests = docRequest.namespaces[ConstantIndex.MobileDrivingLicence2023.isoNamespace]
+        docRequest.docType shouldBe MobileDrivingLicenceScheme.isoDocType
+        val itemRequests = docRequest.namespaces[MobileDrivingLicenceScheme.isoNamespace]
         itemRequests.shouldNotBeNull()
         itemRequests[FAMILY_NAME] shouldBe true
         itemRequests[DOCUMENT_NUMBER] shouldBe true
@@ -139,7 +142,7 @@ class JsonSerializationTest : FreeSpec({
         println(serverResponse)
 
         val payload = serverResponse.documents.first()
-        val jws = JwsSigned.parse(payload).getOrThrow()
+        val jws = JwsSigned.parse(payload).shouldNotBeNull()
 
         val mdlJws = MobileDrivingLicenceJws.deserialize(jws.payload.decodeToString()).getOrThrow().shouldNotBeNull()
         println(mdlJws)
