@@ -1,18 +1,15 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.wallet.lib.DescriptorLookup
 import at.asitplus.wallet.lib.ItemValueDecoder
 import at.asitplus.wallet.lib.ItemValueEncoder
 import at.asitplus.wallet.lib.JsonValueEncoder
 import at.asitplus.wallet.lib.LibraryInitializer
-import at.asitplus.wallet.lib.data.CredentialSubject
+import at.asitplus.wallet.lib.SerializerLookup
 import at.asitplus.wallet.lib.data.jsonSerializer
 import kotlinx.serialization.builtins.ArraySerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
 
 object Initializer {
 
@@ -29,25 +26,16 @@ object Initializer {
      */
     fun initWithVcLib() {
         LibraryInitializer.registerExtensionLibrary(
-            data = LibraryInitializer.ExtensionLibraryInfo(
-                credentialScheme = MobileDrivingLicenceScheme,
-                serializersModule = SerializersModule {
-                    polymorphic(CredentialSubject::class) {
-                    }
-                },
-            ),
-            itemValueLookup = itemValueLookup(),
+            credentialScheme = MobileDrivingLicenceScheme,
+            serializerLookup = serializerLookup(),
             itemValueEncoder = itemValueEncoder(),
             itemValueDecoder = itemValueDecoder(),
             jsonValueEncoder = jsonValueEncoder()
         )
     }
 
-    private fun itemValueLookup(): DescriptorLookup = {
-        when (it) {
-            is Array<*> -> ArraySerializer(DrivingPrivilege.serializer())
-            else -> null
-        }
+    private fun serializerLookup(): SerializerLookup = {
+        if (it is Array<*>) ArraySerializer(DrivingPrivilege.serializer()) else null
     }
 
     private fun itemValueEncoder(): ItemValueEncoder = { descriptor, index, compositeEncoder, value ->
