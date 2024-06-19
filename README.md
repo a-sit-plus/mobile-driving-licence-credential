@@ -4,7 +4,7 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-multiplatform--mobile-orange.svg?logo=kotlin)](http://kotlinlang.org)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.9.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
 ![Java](https://img.shields.io/badge/java-17-blue.svg?logo=OPENJDK)
-[![Maven Central](https://img.shields.io/maven-central/v/at.asitplus.wallet/eupidcredential)](https://mvnrepository.com/artifact/at.asitplus.wallet/mobiledrivinglicence/)
+[![Maven Central](https://img.shields.io/maven-central/v/at.asitplus.wallet/mobiledrivinglicence)](https://mvnrepository.com/artifact/at.asitplus.wallet/mobiledrivinglicence/)
 
 Use data representing mobile driving licences as a ISO 18013-5 Credential, with the help
 of [KMM VC Lib](https://github.com/a-sit-plus/kmm-vc-library).
