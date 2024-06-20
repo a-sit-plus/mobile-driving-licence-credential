@@ -25,7 +25,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("at.asitplus.wallet:vclib:3.8.0-SNAPSHOT")
+                api("at.asitplus.wallet:vclib:3.8.0")
             }
         }
     }
