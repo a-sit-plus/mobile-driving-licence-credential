@@ -1,6 +1,4 @@
 import at.asitplus.gradle.Logger
-import at.asitplus.gradle.kotest
-import at.asitplus.gradle.serialization
 import at.asitplus.gradle.setupDokka
 
 plugins {
@@ -25,7 +23,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("at.asitplus.wallet:vclib:3.8.0")
+                api("at.asitplus.wallet:vclib:4.0.0")
             }
         }
     }
@@ -79,6 +77,10 @@ publishing {
 }
 
 repositories {
+    maven {
+        url = uri(layout.projectDirectory.dir("..").dir("..").dir("repo"))
+        name = "local"
+    }
     mavenCentral()
     maven(url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
 }
