@@ -4,6 +4,7 @@ import at.asitplus.crypto.datatypes.cose.CoseHeader
 import at.asitplus.crypto.datatypes.cose.CoseKey
 import at.asitplus.crypto.datatypes.cose.CoseSigned
 import at.asitplus.wallet.lib.agent.DefaultCryptoService
+import at.asitplus.wallet.lib.agent.RandomKeyPairAdapter
 import at.asitplus.wallet.lib.cbor.DefaultCoseService
 import at.asitplus.wallet.lib.cbor.DefaultVerifierCoseService
 import at.asitplus.wallet.lib.iso.DeviceAuth
@@ -56,19 +57,19 @@ class IsoMdocTest : FreeSpec({
 
         val verifierRequest = verifier.buildDeviceRequest()
         val walletResponse = wallet.buildDeviceResponse(verifierRequest)
-        issuer.cryptoService.coseKey shouldNotBe null
-        verifier.verifyResponse(walletResponse, issuer.cryptoService.coseKey)
+        issuer.cryptoService.keyPairAdapter.coseKey shouldNotBe null
+        verifier.verifyResponse(walletResponse, issuer.cryptoService.keyPairAdapter.coseKey)
     }
 
 })
 
 class Wallet {
 
-    val cryptoService = DefaultCryptoService()
+    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
     val coseService = DefaultCoseService(cryptoService)
 
     val deviceKeyInfo = DeviceKeyInfo(
-        deviceKey = cryptoService.coseKey
+        deviceKey = cryptoService.keyPairAdapter.coseKey
     )
 
     var storedMdl: MobileDrivingLicence? = null
@@ -148,7 +149,7 @@ class Wallet {
 
 class Issuer {
 
-    val cryptoService = DefaultCryptoService()
+    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
     val coseService = DefaultCoseService(cryptoService)
 
     suspend fun buildDeviceResponse(walletKeyInfo: DeviceKeyInfo): DeviceResponse {
@@ -216,7 +217,7 @@ class Issuer {
 
 class Verifier {
 
-    val cryptoService = DefaultCryptoService()
+    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
     val coseService = DefaultCoseService(cryptoService)
     val verifierCoseService = DefaultVerifierCoseService()
 
