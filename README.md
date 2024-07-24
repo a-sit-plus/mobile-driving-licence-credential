@@ -50,6 +50,10 @@ These attributes are implemented:
 
 ## Changelog
 
+Release 1.0.1:
+
+- Update to `vclib` 4.0.0
+
 Release 1.0.0:
 
 - Initial release, imported from vclib 3.7.0

@@ -1,4 +1,6 @@
 import at.asitplus.gradle.Logger
+import at.asitplus.gradle.kotest
+import at.asitplus.gradle.serialization
 import at.asitplus.gradle.setupDokka
 
 plugins {
@@ -77,6 +79,7 @@ publishing {
 }
 
 repositories {
+    mavenCentral()
     maven(url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
 }
 
