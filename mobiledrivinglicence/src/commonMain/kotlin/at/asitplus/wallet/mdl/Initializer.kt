@@ -17,14 +17,14 @@ object Initializer {
      * A reference to this class is enough to trigger the init block
      */
     init {
-        initWithVcLib()
+        initWithVck()
     }
 
     /**
      * This has to be called first, before anything first, to load the
-     * relevant classes of this library into the base implementations of vclib
+     * relevant classes of this library into the base implementations of VC-K
      */
-    fun initWithVcLib() {
+    fun initWithVck() {
         LibraryInitializer.registerExtensionLibrary(
             credentialScheme = MobileDrivingLicenceScheme,
             serializerLookup = serializerLookup(),
