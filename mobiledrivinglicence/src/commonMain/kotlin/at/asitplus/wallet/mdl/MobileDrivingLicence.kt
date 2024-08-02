@@ -1,8 +1,8 @@
 package at.asitplus.wallet.mdl
 
 import at.asitplus.KmmResult.Companion.wrap
-import at.asitplus.crypto.datatypes.io.ByteArrayBase64UrlSerializer
-import at.asitplus.wallet.lib.iso.cborSerializer
+import at.asitplus.signum.indispensable.io.ByteArrayBase64UrlSerializer
+import at.asitplus.wallet.lib.iso.vckCborSerializer
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_IN_YEARS
@@ -119,7 +119,7 @@ data class MobileDrivingLicence(
     @SerialName(SIGNATURE_USUAL_MARK)
     val signatureOrUsualMark: ByteArray? = null,
 ) {
-    fun serialize() = cborSerializer.encodeToByteArray(this)
+    fun serialize() = vckCborSerializer.encodeToByteArray(this)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -239,7 +239,7 @@ data class MobileDrivingLicence(
 
     companion object {
         fun deserialize(it: ByteArray) = kotlin.runCatching {
-            cborSerializer.decodeFromByteArray<MobileDrivingLicence>(it)
+            vckCborSerializer.decodeFromByteArray<MobileDrivingLicence>(it)
         }.wrap()
     }
 }

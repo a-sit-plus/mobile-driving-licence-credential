@@ -3,7 +3,7 @@
 package at.asitplus.wallet.mdl
 
 import at.asitplus.KmmResult.Companion.wrap
-import at.asitplus.wallet.lib.iso.cborSerializer
+import at.asitplus.wallet.lib.iso.vckCborSerializer
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -29,7 +29,7 @@ data class DrivingPrivilege(
     @SerialName("codes")
     val codes: Array<DrivingPrivilegeCode>? = null,
 ) {
-    fun serialize() = cborSerializer.encodeToByteArray(this)
+    fun serialize() = vckCborSerializer.encodeToByteArray(this)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false
@@ -57,7 +57,7 @@ data class DrivingPrivilege(
 
     companion object {
         fun deserialize(it: ByteArray) = kotlin.runCatching {
-            cborSerializer.decodeFromByteArray<DrivingPrivilege>(it)
+            vckCborSerializer.decodeFromByteArray<DrivingPrivilege>(it)
         }.wrap()
     }
 }
@@ -71,11 +71,11 @@ data class DrivingPrivilegeCode(
     @SerialName("value")
     val value: String? = null,
 ) {
-    fun serialize() = cborSerializer.encodeToByteArray(this)
+    fun serialize() = vckCborSerializer.encodeToByteArray(this)
 
     companion object {
         fun deserialize(it: ByteArray) = kotlin.runCatching {
-            cborSerializer.decodeFromByteArray<DrivingPrivilegeCode>(it)
+            vckCborSerializer.decodeFromByteArray<DrivingPrivilegeCode>(it)
         }.wrap()
     }
 }

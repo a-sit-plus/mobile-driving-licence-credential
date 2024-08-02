@@ -1,6 +1,6 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.crypto.datatypes.jws.JwsSigned
+import at.asitplus.signum.indispensable.josef.JwsSigned
 import at.asitplus.wallet.lib.iso.ServerRequest
 import at.asitplus.wallet.lib.iso.ServerResponse
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER

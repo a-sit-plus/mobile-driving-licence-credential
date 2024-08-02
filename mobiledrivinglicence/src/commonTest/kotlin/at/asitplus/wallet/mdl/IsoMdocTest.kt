@@ -1,8 +1,8 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.crypto.datatypes.cose.CoseHeader
-import at.asitplus.crypto.datatypes.cose.CoseKey
-import at.asitplus.crypto.datatypes.cose.CoseSigned
+import at.asitplus.signum.indispensable.cosef.CoseHeader
+import at.asitplus.signum.indispensable.cosef.CoseKey
+import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.wallet.lib.agent.DefaultCryptoService
 import at.asitplus.wallet.lib.cbor.DefaultCoseService
 import at.asitplus.wallet.lib.cbor.DefaultVerifierCoseService
@@ -40,7 +40,8 @@ import io.matthewnelson.encoding.base16.Base16
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.cbor.ByteStringWrapper
+import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
+import at.asitplus.wallet.lib.agent.RandomKeyPairAdapter
 import kotlin.random.Random
 
 class IsoMdocTest : FreeSpec({
@@ -56,19 +57,19 @@ class IsoMdocTest : FreeSpec({
 
         val verifierRequest = verifier.buildDeviceRequest()
         val walletResponse = wallet.buildDeviceResponse(verifierRequest)
-        issuer.cryptoService.coseKey shouldNotBe null
-        verifier.verifyResponse(walletResponse, issuer.cryptoService.coseKey)
+        issuer.cryptoService.keyPairAdapter.coseKey shouldNotBe null
+        verifier.verifyResponse(walletResponse, issuer.cryptoService.keyPairAdapter.coseKey)
     }
 
 })
 
 class Wallet {
 
-    val cryptoService = DefaultCryptoService()
+    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
     val coseService = DefaultCoseService(cryptoService)
 
     val deviceKeyInfo = DeviceKeyInfo(
-        deviceKey = cryptoService.coseKey
+        deviceKey = cryptoService.keyPairAdapter.coseKey
     )
 
     var storedMdl: MobileDrivingLicence? = null
@@ -148,7 +149,7 @@ class Wallet {
 
 class Issuer {
 
-    val cryptoService = DefaultCryptoService()
+    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
     val coseService = DefaultCoseService(cryptoService)
 
     suspend fun buildDeviceResponse(walletKeyInfo: DeviceKeyInfo): DeviceResponse {
@@ -216,7 +217,7 @@ class Issuer {
 
 class Verifier {
 
-    val cryptoService = DefaultCryptoService()
+    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
     val coseService = DefaultCoseService(cryptoService)
     val verifierCoseService = DefaultVerifierCoseService()
 

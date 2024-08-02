@@ -23,7 +23,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("at.asitplus.wallet:vclib:4.0.0")
+                api("at.asitplus.wallet:vck:4.1.0-SNAPSHOT")
             }
         }
     }
@@ -77,11 +77,7 @@ publishing {
 }
 
 repositories {
-    maven {
-        url = uri(layout.projectDirectory.dir("..").dir("..").dir("repo"))
-        name = "local"
-    }
-    mavenCentral()
+    mavenLocal()
     maven(url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
 }
 

@@ -1,6 +1,6 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.crypto.datatypes.cose.CoseSigned
+import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.wallet.lib.data.jsonSerializer
 import at.asitplus.wallet.lib.iso.DeviceRequest
 import at.asitplus.wallet.lib.iso.DeviceResponse
