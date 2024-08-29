@@ -124,10 +124,10 @@ class Wallet {
                 Document(
                     docType = MobileDrivingLicenceScheme.isoDocType,
                     issuerSigned = IssuerSigned(
-                        namespaces = mapOf(
-                            MobileDrivingLicenceScheme.isoNamespace to IssuerSignedList(storedMdlItems!!.entries.filter {
+                        namespacedItems = mapOf(
+                            MobileDrivingLicenceScheme.isoNamespace to storedMdlItems!!.entries.filter {
                                 it.value.elementIdentifier in requestedKeys
-                            })
+                            }.map { it.value }
                         ),
                         issuerAuth = storedIssuerAuth!!
                     ),
@@ -176,7 +176,7 @@ class Issuer {
             digestAlgorithm = "SHA-256",
             valueDigests = mapOf(
                 MobileDrivingLicenceScheme.isoNamespace to ValueDigestList(entries = issuerSigned.map {
-                    ValueDigest.fromIssuerSigned(it)
+                    ValueDigest.fromIssuerSigned(MobileDrivingLicenceScheme.isoNamespace, it)
                 })
             ),
             deviceKeyInfo = walletKeyInfo,
@@ -194,10 +194,10 @@ class Issuer {
                 Document(
                     docType = MobileDrivingLicenceScheme.isoDocType,
                     issuerSigned = IssuerSigned(
-                        namespaces = mapOf(
-                            MobileDrivingLicenceScheme.isoNamespace to IssuerSignedList.withItems(
-                                issuerSigned
-                            )
+                        namespacedItems = mapOf(
+                            MobileDrivingLicenceScheme.isoNamespace to
+                                 issuerSigned
+
                         ),
                         issuerAuth = coseService.createSignedCose(
                             payload = mso.serializeForIssuerAuth(),
