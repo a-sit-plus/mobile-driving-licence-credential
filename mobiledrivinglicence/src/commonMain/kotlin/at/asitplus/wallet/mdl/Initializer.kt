@@ -1,12 +1,10 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.signum.indispensable.io.ByteArrayBase64UrlSerializer
-import at.asitplus.wallet.lib.ItemValueDecoder
 import at.asitplus.wallet.lib.ItemValueEncoder
 import at.asitplus.wallet.lib.JsonValueEncoder
 import at.asitplus.wallet.lib.LibraryInitializer
 import at.asitplus.wallet.lib.SerializerLookup
-import at.asitplus.wallet.lib.data.jsonSerializer
+import at.asitplus.wallet.lib.data.vckJsonSerializer
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.builtins.ArraySerializer
 import kotlinx.serialization.builtins.ByteArraySerializer
@@ -25,8 +23,8 @@ object Initializer {
     }
 
     /**
-     * This has to be called first, before anything first, to load the
-     * relevant classes of this library into the base implementations of VC-K
+     * This has to be called first, before anything, to load the
+     * relevant classes' serializer's of this library into the base implementations of VC-K
      */
     fun initWithVCK() {
         LibraryInitializer.registerExtensionLibrary(
@@ -80,16 +78,8 @@ object Initializer {
         )
     }
 
-    private fun drivingPrivilegeDecoder(): ItemValueDecoder = { descriptor, index, compositeDecoder ->
-        compositeDecoder.decodeSerializableElement(
-            descriptor,
-            index,
-            ArraySerializer(DrivingPrivilege.serializer())
-        )
-    }
-
     private fun jsonValueEncoder(): JsonValueEncoder = {
-        if (it is DrivingPrivilege) jsonSerializer.encodeToJsonElement(it) else null
+        if (it is DrivingPrivilege) vckJsonSerializer.encodeToJsonElement(it) else null
     }
 
 }
