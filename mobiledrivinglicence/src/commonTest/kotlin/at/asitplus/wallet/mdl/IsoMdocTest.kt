@@ -3,28 +3,13 @@ package at.asitplus.wallet.mdl
 import at.asitplus.signum.indispensable.cosef.CoseHeader
 import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseSigned
+import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
+import at.asitplus.signum.indispensable.cosef.toCoseKey
 import at.asitplus.wallet.lib.agent.DefaultCryptoService
-import at.asitplus.wallet.lib.agent.RandomKeyPairAdapter
+import at.asitplus.wallet.lib.agent.EphemeralKeyWithoutCert
 import at.asitplus.wallet.lib.cbor.DefaultCoseService
 import at.asitplus.wallet.lib.cbor.DefaultVerifierCoseService
-import at.asitplus.wallet.lib.iso.DeviceAuth
-import at.asitplus.wallet.lib.iso.DeviceKeyInfo
-import at.asitplus.wallet.lib.iso.DeviceRequest
-import at.asitplus.wallet.lib.iso.DeviceResponse
-import at.asitplus.wallet.lib.iso.DeviceSigned
-import at.asitplus.wallet.lib.iso.DocRequest
-import at.asitplus.wallet.lib.iso.Document
-import at.asitplus.wallet.lib.iso.IssuerSigned
-import at.asitplus.wallet.lib.iso.IssuerSignedItem
-import at.asitplus.wallet.lib.iso.IssuerSignedList
-import at.asitplus.wallet.lib.iso.ItemsRequest
-import at.asitplus.wallet.lib.iso.ItemsRequestList
-import at.asitplus.wallet.lib.iso.MobileSecurityObject
-import at.asitplus.wallet.lib.iso.SingleItemsRequest
-import at.asitplus.wallet.lib.iso.ValidityInfo
-import at.asitplus.wallet.lib.iso.ValueDigest
-import at.asitplus.wallet.lib.iso.ValueDigestList
-import at.asitplus.wallet.lib.iso.sha256
+import at.asitplus.wallet.lib.iso.*
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
@@ -36,13 +21,10 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.matthewnelson.encoding.base16.Base16
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
-import at.asitplus.wallet.lib.agent.RandomKeyPairAdapter
 import kotlin.random.Random
 
 class IsoMdocTest : FreeSpec({
@@ -58,19 +40,18 @@ class IsoMdocTest : FreeSpec({
 
         val verifierRequest = verifier.buildDeviceRequest()
         val walletResponse = wallet.buildDeviceResponse(verifierRequest)
-        issuer.cryptoService.keyPairAdapter.coseKey shouldNotBe null
-        verifier.verifyResponse(walletResponse, issuer.cryptoService.keyPairAdapter.coseKey)
+        verifier.verifyResponse(walletResponse, issuer.cryptoService.keyMaterial.publicKey.toCoseKey().getOrThrow())
     }
 
 })
 
 class Wallet {
 
-    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
+    val cryptoService = DefaultCryptoService(EphemeralKeyWithoutCert())
     val coseService = DefaultCoseService(cryptoService)
 
     val deviceKeyInfo = DeviceKeyInfo(
-        deviceKey = cryptoService.keyPairAdapter.coseKey
+        deviceKey =  cryptoService.keyMaterial.publicKey.toCoseKey().getOrThrow()
     )
 
     var storedMdl: MobileDrivingLicence? = null
@@ -150,7 +131,7 @@ class Wallet {
 
 class Issuer {
 
-    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
+    val cryptoService = DefaultCryptoService(EphemeralKeyWithoutCert())
     val coseService = DefaultCoseService(cryptoService)
 
     suspend fun buildDeviceResponse(walletKeyInfo: DeviceKeyInfo): DeviceResponse {
@@ -218,7 +199,7 @@ class Issuer {
 
 class Verifier {
 
-    val cryptoService = DefaultCryptoService(RandomKeyPairAdapter())
+    val cryptoService = DefaultCryptoService(EphemeralKeyWithoutCert())
     val coseService = DefaultCoseService(cryptoService)
     val verifierCoseService = DefaultVerifierCoseService()
 
@@ -257,7 +238,7 @@ class Verifier {
         doc.errors.shouldBeNull()
         val issuerSigned = doc.issuerSigned
         val issuerAuth = issuerSigned.issuerAuth
-        verifierCoseService.verifyCose(issuerAuth, issuerKey).getOrThrow().shouldBe(true)
+        verifierCoseService.verifyCose(issuerAuth, issuerKey).isSuccess shouldBe true
         val issuerAuthPayload = issuerAuth.payload
         issuerAuthPayload.shouldNotBeNull()
         val mso = issuerSigned.getIssuerAuthPayloadAsMso()
@@ -269,7 +250,7 @@ class Verifier {
         val walletKey = mso.deviceKeyInfo.deviceKey
         val deviceSignature = doc.deviceSigned.deviceAuth.deviceSignature
         deviceSignature.shouldNotBeNull()
-        verifierCoseService.verifyCose(deviceSignature, walletKey).getOrThrow().shouldBe(true)
+        verifierCoseService.verifyCose(deviceSignature, walletKey).isSuccess shouldBe true
         val namespaces = issuerSigned.namespaces
         namespaces.shouldNotBeNull()
         val issuerSignedItems = namespaces[MobileDrivingLicenceScheme.isoNamespace]
