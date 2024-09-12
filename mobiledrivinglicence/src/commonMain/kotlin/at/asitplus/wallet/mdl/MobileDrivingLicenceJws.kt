@@ -1,7 +1,7 @@
 package at.asitplus.wallet.mdl
 
 import at.asitplus.KmmResult.Companion.wrap
-import at.asitplus.wallet.lib.data.InstantLongSerializer
+import at.asitplus.signum.indispensable.cosef.InstantLongSerializer
 import at.asitplus.wallet.lib.data.NullableInstantLongSerializer
 import at.asitplus.wallet.lib.data.jsonSerializer
 import kotlinx.datetime.Instant
