@@ -50,73 +50,139 @@ import kotlinx.serialization.encodeToByteArray
  */
 @Serializable
 data class MobileDrivingLicence(
+    /** Last name, surname, or primary identifier of the mDL holder. */
     @SerialName(FAMILY_NAME)
     val familyName: String,
+
+    /** First name(s), other name(s), or secondary identifier, of the mDL holder. */
     @SerialName(GIVEN_NAME)
     val givenName: String,
+
+    /** Day, month and year on which the mDL holder was born. If unknown, approximate date of birth. */
     @SerialName(BIRTH_DATE)
     val dateOfBirth: LocalDate? = null,
+
+    /** Date when mDL was issued. */
     @SerialName(ISSUE_DATE)
     val issueDate: LocalDate,
+
+    /** Date when mDL expires. */
     @SerialName(EXPIRY_DATE)
     val expiryDate: LocalDate,
+
+    /** Alpha-2 country code, as defined in ISO 3166-1, of the issuing authority's country or territory. */
     @SerialName(ISSUING_COUNTRY)
     val issuingCountry: String? = null,
+
+    /** Issuing authority name. */
     @SerialName(ISSUING_AUTHORITY)
     val issuingAuthority: String? = null,
+
+    /** The number assigned or calculated by the issuing authority. */
     @SerialName(DOCUMENT_NUMBER)
     val licenceNumber: String,
+
+    /** A reproduction of the mDL holder's portrait. */
     @SerialName(PORTRAIT)
     @ByteString
-    @Serializable(with = ByteArrayBase64UrlSerializer::class) // TODO and with cbor!?
+    @Serializable(with = ByteArrayBase64UrlSerializer::class)
     val portrait: ByteArray,
+
+    /** Driving privileges of the mDL holder. */
     @SerialName(DRIVING_PRIVILEGES)
     val drivingPrivileges: List<DrivingPrivilege>,
+
+    /** Distinguishing sign of the issuing country according to ISO/IEC 18013-1:2018, Annex F.  */
     @SerialName(UN_DISTINGUISHING_SIGN)
     val unDistinguishingSign: String? = null,
+
+    /** An audit control number assigned by the issuing authority. */
     @SerialName(ADMINISTRATIVE_NUMBER)
     val administrativeNumber: String? = null,
+
+    /** mDL holder's sex using values as defined in ISO/IEC 5218. */
     @SerialName(SEX)
     @Serializable(with = IsoSexEnumSerializer::class)
     val sex: IsoSexEnum? = null,
+
+    /** mDL holder's height in centimetres. */
     @SerialName(HEIGHT)
     val height: UInt? = null,
+
+    /** mDL holder's weight in kilograms */
     @SerialName(WEIGHT)
     val weight: UInt? = null,
+
+    /** mDL holder's eye colour. The value shall be one of the following: "black", "blue", "brown",
+     * "dichromatic", "grey", "green", "hazel", "maroon", "pink", "unknown". */
     @SerialName(EYE_COLOUR)
     val eyeColor: String? = null,
+
+    /** mDL holder's hair color. The value shall be one of the following: "bald", "black", "blond",
+     *  "brown", "grey", "red", "auburn", "sandy","white", "unknown"  */
     @SerialName(HAIR_COLOUR)
     val hairColor: String? = null,
+
+    /** Country and municipality or state/province where the mDL holder was born. */
     @SerialName(BIRTH_PLACE)
     val placeOfBirth: String? = null,
+
+    /** The place where the mDL holder resides and/or may be contracted. */
     @SerialName(RESIDENT_ADDRESS)
     val placeOfResidence: String? = null,
+
+    /** Date when portrait was taken. */
     @SerialName(PORTRAIT_CAPTURE_DATE)
     val portraitImageTimestamp: LocalDate? = null,
+
+    /** The age of the mDL holder. */
     @SerialName(AGE_IN_YEARS)
     val ageInYears: UInt? = null,
+
+    /** The year when the mDL holder was born. */
     @SerialName(AGE_BIRTH_YEAR)
     val ageBirthYear: UInt? = null,
+
+    /** Age attestation: Over 18 years old? */
     @SerialName(AGE_OVER_18)
     val ageOver18: Boolean? = null,
+
+    /** Country subdivision code of the jurisdiction that issued the mDL as defined in ISO 3166-2:2020, Clause 8. */
     @SerialName(ISSUING_JURISDICTION)
     val issuingJurisdiction: String? = null,
+
+    /** Nationality of the mDL holder as a two letter country code (alpha-2 code) defined in ISO 3166-1. */
     @SerialName(NATIONALITY)
     val nationality: String? = null,
+
+    /** The city where the mDL holder lives. */
     @SerialName(RESIDENT_CITY)
     val residentCity: String? = null,
+
+    /** The state/province/district where the mDL holder lives. */
     @SerialName(RESIDENT_STATE)
     val residentState: String? = null,
+
+    /** The postal code of the mDL holder. */
     @SerialName(RESIDENT_POSTAL_CODE)
     val residentPostalCode: String? = null,
+
+    /** The country where the mDL holder lives as a two letter country code (alpha-2 code) defined in ISO 3166-1. */
     @SerialName(RESIDENT_COUNTRY)
     val residentCountry: String? = null,
+
+    /** The family name of the mDL holder using full UTF-8 character set. */
     @SerialName(FAMILY_NAME_NATIONAL_CHARACTER)
     val familyNameNationalCharacters: String? = null,
+
+    /** The given name of the mDL holder using full UTF-8 character set. */
     @SerialName(GIVEN_NAME_NATIONAL_CHARACTER)
     val givenNameNationalCharacters: String? = null,
+
+    /** Image of the signature or usual mark of the mDL holder. */
     @ByteString
     @SerialName(SIGNATURE_USUAL_MARK)
+    @Serializable(with = ByteArrayBase64UrlSerializer::class)
     val signatureOrUsualMark: ByteArray? = null,
 ) {
     fun serialize() = vckCborSerializer.encodeToByteArray(this)
