@@ -151,7 +151,7 @@ class Issuer {
             digestAlgorithm = "SHA-256",
             valueDigests = mapOf(
                 MobileDrivingLicenceScheme.isoNamespace to ValueDigestList(entries = issuerSigned.map {
-                    ValueDigest.fromIssuerSigned(MobileDrivingLicenceScheme.isoNamespace, it)
+                    ValueDigest.fromIssuerSignedItem(it, MobileDrivingLicenceScheme.isoNamespace)
                 })
             ),
             deviceKeyInfo = walletKeyInfo,
