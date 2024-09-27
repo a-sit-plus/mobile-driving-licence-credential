@@ -50,6 +50,10 @@ These attributes are implemented:
 
 ## Changelog
 
+Release 1.1.0:
+- Proper deserialization handling
+- Update to VC-K 5.0.0
+
 Release 1.0.3:
 - Rename `Initializer.initWithVck` to `Initializer.initWithVCK`
 
