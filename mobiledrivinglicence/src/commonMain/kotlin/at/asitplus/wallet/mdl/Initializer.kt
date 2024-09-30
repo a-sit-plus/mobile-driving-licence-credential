@@ -26,7 +26,7 @@ object Initializer {
         LibraryInitializer.registerExtensionLibrary(
             credentialScheme = MobileDrivingLicenceScheme,
             jsonValueEncoder = jsonValueEncoder(),
-            itemValueDecoderMap = mapOf(
+            itemValueSerializerMap = mapOf(
                 MobileDrivingLicenceDataElements.BIRTH_DATE to LocalDate.serializer(),
                 MobileDrivingLicenceDataElements.ISSUE_DATE to LocalDate.serializer(),
                 MobileDrivingLicenceDataElements.EXPIRY_DATE to LocalDate.serializer(),

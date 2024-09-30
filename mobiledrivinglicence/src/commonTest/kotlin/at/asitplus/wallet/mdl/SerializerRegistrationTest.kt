@@ -53,7 +53,7 @@ private fun dataMap(): Map<String, Any> =
         ISSUE_DATE to randomLocalDate(),
         EXPIRY_DATE to randomLocalDate(),
         PORTRAIT to Random.nextBytes(32),
-        DRIVING_PRIVILEGES to listOf(
+        DRIVING_PRIVILEGES to arrayOf(
             DrivingPrivilege(
                 vehicleCategoryCode = "A",
                 issueDate = randomLocalDate(),

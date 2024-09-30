@@ -3,7 +3,7 @@ package at.asitplus.wallet.mdl
 import at.asitplus.KmmResult.Companion.wrap
 import at.asitplus.signum.indispensable.cosef.InstantLongSerializer
 import at.asitplus.wallet.lib.data.NullableInstantLongSerializer
-import at.asitplus.wallet.lib.data.jsonSerializer
+import at.asitplus.wallet.lib.data.vckJsonSerializer
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -27,11 +27,11 @@ data class MobileDrivingLicenceJws(
     val expiration: Instant?,
 ) {
 
-    fun serialize() = jsonSerializer.encodeToString(this)
+    fun serialize() = vckJsonSerializer.encodeToString(this)
 
     companion object {
         fun deserialize(it: String) = kotlin.runCatching {
-            jsonSerializer.decodeFromString<MobileDrivingLicenceJws>(it)
+            vckJsonSerializer.decodeFromString<MobileDrivingLicenceJws>(it)
         }.wrap()
     }
 

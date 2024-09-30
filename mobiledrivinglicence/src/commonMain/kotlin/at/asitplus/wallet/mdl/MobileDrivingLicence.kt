@@ -41,7 +41,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.ByteString
-import kotlinx.serialization.cbor.ValueTags
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 
@@ -72,7 +71,7 @@ data class MobileDrivingLicence(
     @Serializable(with = ByteArrayBase64UrlSerializer::class) // TODO and with cbor!?
     val portrait: ByteArray,
     @SerialName(DRIVING_PRIVILEGES)
-    val drivingPrivileges: List<DrivingPrivilege>,
+    val drivingPrivileges: Array<DrivingPrivilege>,
     @SerialName(UN_DISTINGUISHING_SIGN)
     val unDistinguishingSign: String? = null,
     @SerialName(ADMINISTRATIVE_NUMBER)
