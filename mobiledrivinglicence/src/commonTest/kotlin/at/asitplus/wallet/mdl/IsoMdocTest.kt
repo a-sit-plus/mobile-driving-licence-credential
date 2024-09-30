@@ -85,7 +85,7 @@ class Wallet {
             portrait = byteArrayOf(),
             issueDate = LocalDate.parse(issueDateValue),
             expiryDate = LocalDate.parse(expiryDateValue),
-            drivingPrivileges = drivingPrivilegesValue.toList(),
+            drivingPrivileges = drivingPrivilegesValue,
         )
     }
 

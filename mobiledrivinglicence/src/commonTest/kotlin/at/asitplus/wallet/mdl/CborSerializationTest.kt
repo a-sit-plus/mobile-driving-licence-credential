@@ -33,7 +33,7 @@ class CborSerializationTest : FreeSpec({
             issuingAuthority = "LPD Steiermark",
             licenceNumber = "A/3f984/019",
             portrait = Random.nextBytes(16),
-            drivingPrivileges = listOf(
+            drivingPrivileges = arrayOf(
                 DrivingPrivilege(
                     vehicleCategoryCode = "A",
                     issueDate = LocalDate.parse("2018-08-09"),
