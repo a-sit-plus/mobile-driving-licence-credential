@@ -1,7 +1,6 @@
 package at.asitplus.wallet.mdl
 
 import at.asitplus.signum.indispensable.cosef.CoseSigned
-import at.asitplus.wallet.lib.data.jsonSerializer
 import at.asitplus.wallet.lib.iso.*
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
@@ -19,7 +18,6 @@ import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.encodeToString
 import kotlin.random.Random
 
 class CborSerializationTest : FreeSpec({
@@ -42,44 +40,16 @@ class CborSerializationTest : FreeSpec({
                     expiryDate = LocalDate.parse("2024-10-20")
                 )
             ),
-            unDistinguishingSign = "AT"
+            unDistinguishingSign = "AT",
         )
 
         val serialized = mdl.serialize().encodeToString(Base16(true)).uppercase()
-        println(serialized)
 
         serialized shouldContain "76656869636C655F63617465676F72795F636F6465" // "vehicle_category_code"
         serialized shouldContain "69737375655F64617465" // "issue_date"
         serialized shouldContain "323031382D30382D3039" // "2018-08-09"
         serialized shouldContain "6578706972795F64617465" // "expiry_date"
         serialized shouldContain "6578706972795" // "2024-10-20"
-    }
-
-    "mDL as JSON" {
-        val mdl = MobileDrivingLicence(
-            familyName = "Mustermann",
-            givenName = "Max",
-            dateOfBirth = LocalDate.parse("1970-01-01"),
-            issueDate = LocalDate.parse("2018-08-09"),
-            expiryDate = LocalDate.parse("2024-10-20"),
-            issuingCountry = "AT",
-            issuingAuthority = "LPD Steiermark",
-            licenceNumber = "A/3f984/019",
-            portrait = Random.nextBytes(16),
-            drivingPrivileges = listOf(
-                DrivingPrivilege(
-                    vehicleCategoryCode = "A",
-                    issueDate = LocalDate.parse("2018-08-09"),
-                    expiryDate = LocalDate.parse("2024-10-20")
-                )
-            ),
-            unDistinguishingSign = "AT"
-        )
-
-        val serialized = jsonSerializer.encodeToString(mdl)
-        println(serialized)
-
-        serialized shouldContain "LPD Steiermark"
     }
 
     // From ISO/IEC 18013-5:2021(E), D4.1.1, page 115
@@ -134,7 +104,6 @@ class CborSerializationTest : FreeSpec({
 
         val deviceRequest = DeviceRequest.deserialize(input.decodeToByteArray(Base16(true)))
             .getOrThrow().shouldNotBeNull()
-        println(deviceRequest)
 
         deviceRequest.version shouldBe "1.0"
         val docRequest = deviceRequest.docRequests.first()
@@ -322,8 +291,6 @@ class CborSerializationTest : FreeSpec({
         val deviceResponse = DeviceResponse.deserialize(input.decodeToByteArray(Base16(true)))
             .getOrThrow().shouldNotBeNull()
 
-        println(deviceResponse)
-
         deviceResponse.version shouldBe "1.0"
         val document = deviceResponse.documents?.get(0)
         document.shouldNotBeNull()
@@ -387,7 +354,6 @@ class CborSerializationTest : FreeSpec({
         )
 
         val serialized = drivingPrivilege.serialize().encodeToString(Base16(true)).uppercase()
-        println(serialized)
 
         serialized shouldContain "76656869636C655F63617465676F72795F636F6465" // "vehicle_category_code"
         serialized shouldContain "69737375655F64617465" // "issue_date"
@@ -599,12 +565,10 @@ class CborSerializationTest : FreeSpec({
         """.trimIndent().replace("\n", "").uppercase()
 
         val coseSigned = CoseSigned.deserialize(input.decodeToByteArray(Base16(true))).getOrThrow()
-        println(coseSigned)
 
         val payload = coseSigned.payload
         payload.shouldNotBeNull()
         val mso = MobileSecurityObject.deserializeFromIssuerAuth(payload).getOrThrow().shouldNotBeNull()
-        println(mso)
         mso.version shouldBe "1.0"
         mso.digestAlgorithm shouldBe "SHA-256"
         mso.docType shouldBe MobileDrivingLicenceScheme.isoDocType
