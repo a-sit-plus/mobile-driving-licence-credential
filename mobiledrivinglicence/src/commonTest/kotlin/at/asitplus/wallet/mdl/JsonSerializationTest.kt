@@ -1,6 +1,7 @@
 package at.asitplus.wallet.mdl
 
 import at.asitplus.signum.indispensable.josef.JwsSigned
+import at.asitplus.wallet.lib.data.vckJsonSerializer
 import at.asitplus.wallet.lib.iso.ServerRequest
 import at.asitplus.wallet.lib.iso.ServerResponse
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
@@ -14,7 +15,10 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.encodeToString
+import kotlin.random.Random
 
 class JsonSerializationTest : FreeSpec({
 
@@ -42,7 +46,6 @@ class JsonSerializationTest : FreeSpec({
         """.trimIndent()
 
         val serverRequest = ServerRequest.deserialize(input).getOrThrow().shouldNotBeNull()
-        println(serverRequest)
 
         serverRequest.version shouldBe "1.0"
         val docRequest = serverRequest.docRequests[0]
@@ -55,6 +58,32 @@ class JsonSerializationTest : FreeSpec({
         itemRequests[ISSUE_DATE] shouldBe true
         itemRequests[EXPIRY_DATE] shouldBe true
         itemRequests[PORTRAIT] shouldBe false
+    }
+
+    "mDL as JSON" {
+        val mdl = MobileDrivingLicence(
+            familyName = "Mustermann",
+            givenName = "Max",
+            dateOfBirth = LocalDate.parse("1970-01-01"),
+            issueDate = LocalDate.parse("2018-08-09"),
+            expiryDate = LocalDate.parse("2024-10-20"),
+            issuingCountry = "AT",
+            issuingAuthority = "LPD Steiermark",
+            licenceNumber = "A/3f984/019",
+            portrait = Random.nextBytes(16),
+            drivingPrivileges = arrayOf(
+                DrivingPrivilege(
+                    vehicleCategoryCode = "A",
+                    issueDate = LocalDate.parse("2018-08-09"),
+                    expiryDate = LocalDate.parse("2024-10-20")
+                )
+            ),
+            unDistinguishingSign = "AT"
+        )
+
+        val serialized = vckJsonSerializer.encodeToString(mdl)
+
+        serialized shouldContain "LPD Steiermark"
     }
 
     // from ISO/IEC 18013-5:2021(E), D4.2.1.2, page 121
@@ -137,13 +166,11 @@ class JsonSerializationTest : FreeSpec({
         """.trimIndent()
 
         val serverResponse = ServerResponse.deserialize(input).getOrThrow().shouldNotBeNull()
-        println(serverResponse)
 
         val payload = serverResponse.documents.first()
-        val jws = JwsSigned.parse(payload).getOrThrow()
+        val jws = JwsSigned.deserialize(payload).getOrThrow()
 
         val mdlJws = MobileDrivingLicenceJws.deserialize(jws.payload.decodeToString()).getOrThrow().shouldNotBeNull()
-        println(mdlJws)
 
         mdlJws.doctype shouldBe MobileDrivingLicenceScheme.isoDocType
         val mdl = mdlJws.namespaces.mdl

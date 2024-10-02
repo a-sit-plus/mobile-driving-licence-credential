@@ -69,8 +69,6 @@ data class MobileDrivingLicence(
     /** Date when mDL expires. */
     @SerialName(EXPIRY_DATE)
     val expiryDate: LocalDate,
-
-    /** Alpha-2 country code, as defined in ISO 3166-1, of the issuing authority's country or territory. */
     @SerialName(ISSUING_COUNTRY)
     val issuingCountry: String? = null,
 
@@ -90,7 +88,7 @@ data class MobileDrivingLicence(
 
     /** Driving privileges of the mDL holder. */
     @SerialName(DRIVING_PRIVILEGES)
-    val drivingPrivileges: List<DrivingPrivilege>,
+    val drivingPrivileges: Array<DrivingPrivilege>,
 
     /** Distinguishing sign of the issuing country according to ISO/IEC 18013-1:2018, Annex F.  */
     @SerialName(UN_DISTINGUISHING_SIGN)
