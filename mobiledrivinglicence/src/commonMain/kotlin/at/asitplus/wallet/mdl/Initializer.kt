@@ -44,7 +44,12 @@ object Initializer {
     }
 
     private fun jsonValueEncoder(): JsonValueEncoder = {
-        if (it is DrivingPrivilege) vckJsonSerializer.encodeToJsonElement(it) else null
+        when (it) {
+            is DrivingPrivilege -> vckJsonSerializer.encodeToJsonElement(it)
+            is LocalDate -> vckJsonSerializer.encodeToJsonElement(it)
+            is UInt -> vckJsonSerializer.encodeToJsonElement(it)
+            else -> null
+        }
     }
 
 }

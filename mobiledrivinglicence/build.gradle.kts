@@ -1,6 +1,4 @@
 import at.asitplus.gradle.Logger
-import at.asitplus.gradle.kotest
-import at.asitplus.gradle.serialization
 import at.asitplus.gradle.setupDokka
 
 plugins {
