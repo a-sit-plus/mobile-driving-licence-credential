@@ -50,6 +50,9 @@ These attributes are implemented:
 
 ## Changelog
 
+Release 1.1.1:
+- Fix serialization of boolean element `age_over_18`
+
 Release 1.1.0:
 - Proper deserialization handling
 - Update to VC-K 5.0.0
