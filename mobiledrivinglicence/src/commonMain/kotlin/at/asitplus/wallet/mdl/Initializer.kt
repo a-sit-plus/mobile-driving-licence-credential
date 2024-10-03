@@ -39,6 +39,7 @@ object Initializer {
                 MobileDrivingLicenceDataElements.AGE_IN_YEARS to UInt.serializer(),
                 MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR to UInt.serializer(),
                 MobileDrivingLicenceDataElements.SIGNATURE_USUAL_MARK to ByteArraySerializer(),
+                MobileDrivingLicenceDataElements.AGE_OVER_18 to Boolean.serializer(),
             )
         )
     }
