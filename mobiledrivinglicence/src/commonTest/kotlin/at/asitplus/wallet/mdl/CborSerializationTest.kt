@@ -18,6 +18,7 @@ import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlin.random.Random
 
 class CborSerializationTest : FreeSpec({
@@ -320,7 +321,7 @@ class CborSerializationTest : FreeSpec({
             issueDate = LocalDate.parse("2017-02-23"),
             expiryDate = LocalDate.parse("2024-10-20")
         )
-        val mso = document.issuerSigned.getIssuerAuthPayloadAsMso().getOrThrow()
+        val mso = document.issuerSigned.issuerAuth.payload!!
 
         mso.version shouldBe "1.0"
         mso.digestAlgorithm shouldBe "SHA-256"
@@ -383,7 +384,7 @@ class CborSerializationTest : FreeSpec({
         """.trimIndent().replace("\n", "").uppercase()
 
         val inputDecoded = input.decodeToByteArray(Base16(true))
-        val deserialized = IssuerSignedItem.deserialize(inputDecoded, MobileDrivingLicenceScheme.isoNamespace)
+        val deserialized = IssuerSignedItem.deserialize(inputDecoded, MobileDrivingLicenceScheme.isoNamespace, elementIdentifier = "issue_date")
             .getOrThrow().shouldNotBeNull()
         val serialized = deserialized.serialize(MobileDrivingLicenceScheme.isoNamespace)
 
@@ -447,7 +448,7 @@ class CborSerializationTest : FreeSpec({
         """.trimIndent().replace("\n", "")
 
         val inputDecoded = input.decodeToByteArray(Base16(true))
-        val deserialized = IssuerSignedItem.deserialize(inputDecoded, MobileDrivingLicenceScheme.isoNamespace)
+        val deserialized = IssuerSignedItem.deserialize(inputDecoded, MobileDrivingLicenceScheme.isoNamespace, elementIdentifier = "driving_privileges")
             .getOrThrow().shouldNotBeNull()
         val serialized = deserialized.serialize(MobileDrivingLicenceScheme.isoNamespace)
 
@@ -564,11 +565,10 @@ class CborSerializationTest : FreeSpec({
             044b890ad85aa53f129134775d733754d7cb7a413766aeff13cb2e
         """.trimIndent().replace("\n", "").uppercase()
 
-        val coseSigned = CoseSigned.deserialize(input.decodeToByteArray(Base16(true))).getOrThrow()
+        val coseSigned = CoseSigned.deserialize(MobileSecurityObject.serializer(), input.decodeToByteArray(Base16(true))).getOrThrow()
 
-        val payload = coseSigned.payload
-        payload.shouldNotBeNull()
-        val mso = MobileSecurityObject.deserializeFromIssuerAuth(payload).getOrThrow().shouldNotBeNull()
+
+        val mso = coseSigned.payload!!
         mso.version shouldBe "1.0"
         mso.digestAlgorithm shouldBe "SHA-256"
         mso.docType shouldBe MobileDrivingLicenceScheme.isoDocType
@@ -588,7 +588,7 @@ class CborSerializationTest : FreeSpec({
         valueDigestListUs.findItem(1U) shouldBe "4D80E1E2E4FB246D97895427CE7000BB59BB24C8CD003ECF94BF35BBD2917E34"
             .decodeToByteArray(Base16(true))
 
-        coseSigned.serialize().encodeToString(Base16(true)) shouldBe input
+        coseSigned.serialize(MobileSecurityObject.serializer()).encodeToString(Base16(true)) shouldBe input
     }
 
 })

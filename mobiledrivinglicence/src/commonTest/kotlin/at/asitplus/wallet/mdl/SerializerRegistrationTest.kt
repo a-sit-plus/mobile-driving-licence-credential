@@ -1,12 +1,22 @@
 package at.asitplus.wallet.mdl
 
+import at.asitplus.signum.indispensable.CryptoSignature
+import at.asitplus.signum.indispensable.cosef.CoseEllipticCurve
 import at.asitplus.signum.indispensable.cosef.CoseHeader
+import at.asitplus.signum.indispensable.cosef.CoseKey
+import at.asitplus.signum.indispensable.cosef.CoseKeyParams
+import at.asitplus.signum.indispensable.cosef.CoseKeyType
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
 import at.asitplus.wallet.lib.agent.SubjectCredentialStore
 import at.asitplus.wallet.lib.data.CredentialToJsonConverter
+import at.asitplus.wallet.lib.iso.DeviceKeyInfo
 import at.asitplus.wallet.lib.iso.IssuerSigned
 import at.asitplus.wallet.lib.iso.IssuerSignedItem
+import at.asitplus.wallet.lib.iso.MobileSecurityObject
+import at.asitplus.wallet.lib.iso.ValidityInfo
+import at.asitplus.wallet.lib.iso.ValueDigest
+import at.asitplus.wallet.lib.iso.ValueDigestList
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_IN_YEARS
@@ -47,7 +57,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.matthewnelson.encoding.base64.Base64
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlinx.serialization.json.JsonObject
 import kotlin.random.Random
 import kotlin.random.nextUInt
@@ -57,9 +69,10 @@ class SerializerRegistrationTest : FreeSpec({
     "Serialization and deserialization" - {
         withData(nameFn = { " for ${it.key}" }, dataMap().entries) {
 
-            val serialized = it.toIssuerSignedItem().serialize(MobileDrivingLicenceScheme.isoNamespace)
+            val item = it.toIssuerSignedItem()
+            val serialized = item.serialize(MobileDrivingLicenceScheme.isoNamespace)
 
-            val deserialized = IssuerSignedItem.deserialize(serialized, MobileDrivingLicenceScheme.isoNamespace)
+            val deserialized = IssuerSignedItem.deserialize(serialized, MobileDrivingLicenceScheme.isoNamespace,item.elementIdentifier)
                 .getOrThrow()
 
             deserialized.elementValue shouldBe it.value
@@ -67,13 +80,25 @@ class SerializerRegistrationTest : FreeSpec({
     }
 
     "Serialization to JSON Element" {
+
+        val mso = MobileSecurityObject(
+            version = "1.0",
+            digestAlgorithm = "SHA-256",
+            valueDigests = mapOf("foo" to ValueDigestList(listOf(ValueDigest(0U, byteArrayOf())))),
+            deviceKeyInfo = deviceKeyInfo(),
+            docType = "docType",
+            validityInfo = ValidityInfo(Clock.System.now(), Clock.System.now(), Clock.System.now())
+        )
+
         val claims = dataMap()
         val namespacedItems: Map<String, List<IssuerSignedItem>> =
             mapOf(MobileDrivingLicenceScheme.isoNamespace to claims.map { it.toIssuerSignedItem() }.toList())
-        val issuerAuth = CoseSigned(ByteStringWrapper(CoseHeader()), null, null, byteArrayOf())
+        val issuerAuth = CoseSigned.create(CoseHeader(),null, mso, CryptoSignature.RSAorHMAC(byteArrayOf(1,3,3,7)),
+            MobileSecurityObject.serializer()
+        )
         val credential = SubjectCredentialStore.StoreEntry.Iso(
             IssuerSigned.fromIssuerSignedItems(namespacedItems, issuerAuth),
-            MobileDrivingLicenceScheme
+            MobileDrivingLicenceScheme.isoNamespace
         )
         val converted = CredentialToJsonConverter.toJsonElement(credential)
             .shouldBeInstanceOf<JsonObject>()
@@ -137,3 +162,7 @@ private fun dataMap(): Map<String, Any> =
 private fun randomString() = Random.nextBytes(16).encodeToString(Base64())
 
 private fun randomLocalDate() = LocalDate(Random.nextInt(1900, 2100), Random.nextInt(1, 12), Random.nextInt(1, 28))
+
+
+private fun deviceKeyInfo() =
+    DeviceKeyInfo(CoseKey(CoseKeyType.EC2, keyParams = CoseKeyParams.EcYBoolParams(CoseEllipticCurve.P256)))

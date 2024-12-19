@@ -26,6 +26,7 @@ import io.matthewnelson.encoding.base16.Base16
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlin.random.Random
 
 class IsoMdocTest : FreeSpec({
@@ -55,7 +56,7 @@ class Wallet {
     )
 
     var storedMdl: MobileDrivingLicence? = null
-    var storedIssuerAuth: CoseSigned? = null
+    var storedIssuerAuth: CoseSigned<MobileSecurityObject>? = null
     var storedMdlItems: IssuerSignedList? = null
 
     fun storeMdl(deviceResponse: DeviceResponse) {
@@ -65,7 +66,7 @@ class Wallet {
         this.storedIssuerAuth = issuerAuth
 
         issuerAuth.payload.shouldNotBeNull()
-        val mso = document.issuerSigned.getIssuerAuthPayloadAsMso().getOrThrow()
+        val mso = document.issuerSigned.issuerAuth.payload!!
 
         val mdlItems = document.issuerSigned.namespaces?.get(MobileDrivingLicenceScheme.isoNamespace).shouldNotBeNull()
         this.storedMdlItems = mdlItems
@@ -93,6 +94,7 @@ class Wallet {
         val itemsRequest = verifierRequest.docRequests[0].itemsRequest
         val isoNamespace = itemsRequest.value.namespaces[MobileDrivingLicenceScheme.isoNamespace].shouldNotBeNull()
         val requestedKeys = isoNamespace.entries.filter { it.value }.map { it.key }
+
         return DeviceResponse(
             version = "1.0",
             documents = arrayOf(
@@ -110,8 +112,11 @@ class Wallet {
                         namespaces = ByteStringWrapper(DeviceNameSpaces(mapOf())),
                         deviceAuth = DeviceAuth(
                             deviceSignature = coseService.createSignedCose(
-                                payload = null,
-                                addKeyId = false
+                                protectedHeader = null,
+                                payload = byteArrayOf(),
+                                serializer = ByteArraySerializer(),
+                                addKeyId = false,
+                                addCertificate = false,
                             ).getOrThrow()
                         )
                     )
@@ -173,7 +178,8 @@ class Issuer {
                             MobileDrivingLicenceScheme.isoNamespace to issuerSigned
                         ),
                         issuerAuth = coseService.createSignedCose(
-                            payload = mso.serializeForIssuerAuth(),
+                            payload = mso,
+                            serializer = MobileSecurityObject.serializer(),
                             addKeyId = false,
                             addCertificate = true,
                         ).getOrThrow()
@@ -215,7 +221,8 @@ class Verifier {
                 ),
                 readerAuth = coseService.createSignedCose(
                     unprotectedHeader = CoseHeader(),
-                    payload = null,
+                    payload = byteArrayOf(),
+                    serializer = ByteArraySerializer(),
                     addKeyId = false,
                 ).getOrThrow()
             )
@@ -231,7 +238,7 @@ class Verifier {
         val issuerAuth = issuerSigned.issuerAuth
         verifierCoseService.verifyCose(issuerAuth, issuerKey).isSuccess shouldBe true
         issuerAuth.payload.shouldNotBeNull()
-        val mso = issuerSigned.getIssuerAuthPayloadAsMso().getOrThrow()
+        val mso = issuerSigned.issuerAuth.payload!!
 
         mso.docType shouldBe MobileDrivingLicenceScheme.isoDocType
         val mdlItems = mso.valueDigests[MobileDrivingLicenceScheme.isoNamespace].shouldNotBeNull()
