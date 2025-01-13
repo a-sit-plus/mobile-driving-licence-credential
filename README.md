@@ -37,7 +37,11 @@ These attributes are implemented:
 - `portrait_capture_date`
 - `age_in_years`
 - `age_birth_year`
+- `age_over_12`
+- `age_over_14`
+- `age_over_16`
 - `age_over_18`
+- `age_over_21`
 - `issuing_jurisdiction`
 - `nationality`
 - `resident_city`
@@ -50,7 +54,13 @@ These attributes are implemented:
 
 ## Changelog
 
-Release 1.1.2
+Release 1.1.4:
+- Add additional claims: `age_over_12`, `age_over_14`, `age_over_16`, `age_over_21`
+
+Release 1.1.3:
+- VC-K 5.2.2
+
+Release 1.1.2:
 - VC-K 5.2.1
 - Kotlin 2.1.0
 

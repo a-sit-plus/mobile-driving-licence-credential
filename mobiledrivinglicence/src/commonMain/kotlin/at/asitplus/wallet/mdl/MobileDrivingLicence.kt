@@ -6,7 +6,11 @@ import at.asitplus.wallet.lib.iso.vckCborSerializer
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_IN_YEARS
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_12
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_14
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_16
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_18
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_21
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_PLACE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
@@ -143,9 +147,25 @@ data class MobileDrivingLicence(
     @SerialName(AGE_BIRTH_YEAR)
     val ageBirthYear: UInt? = null,
 
+    /** Age attestation: Over 12 years old? */
+    @SerialName(AGE_OVER_12)
+    val ageOver12: Boolean? = null,
+
+    /** Age attestation: Over 14 years old? */
+    @SerialName(AGE_OVER_14)
+    val ageOver14: Boolean? = null,
+
+    /** Age attestation: Over 16 years old? */
+    @SerialName(AGE_OVER_16)
+    val ageOver16: Boolean? = null,
+
     /** Age attestation: Over 18 years old? */
     @SerialName(AGE_OVER_18)
     val ageOver18: Boolean? = null,
+
+    /** Age attestation: Over 21 years old? */
+    @SerialName(AGE_OVER_21)
+    val ageOver21: Boolean? = null,
 
     /** Country subdivision code of the jurisdiction that issued the mDL as defined in ISO 3166-2:2020, Clause 8. */
     @SerialName(ISSUING_JURISDICTION)

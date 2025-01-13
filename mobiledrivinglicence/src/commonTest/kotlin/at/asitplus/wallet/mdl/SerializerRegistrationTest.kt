@@ -20,7 +20,11 @@ import at.asitplus.wallet.lib.iso.ValueDigestList
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_IN_YEARS
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_12
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_14
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_16
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_18
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_21
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_PLACE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
@@ -147,7 +151,11 @@ private fun dataMap(): Map<String, Any> =
         PORTRAIT_CAPTURE_DATE to randomLocalDate(),
         AGE_IN_YEARS to Random.nextUInt(1u, 99u),
         AGE_BIRTH_YEAR to Random.nextUInt(1900u, 2100u),
-        AGE_OVER_18 to true,
+        AGE_OVER_12 to Random.nextBoolean(),
+        AGE_OVER_14 to Random.nextBoolean(),
+        AGE_OVER_16 to Random.nextBoolean(),
+        AGE_OVER_18 to Random.nextBoolean(),
+        AGE_OVER_21 to Random.nextBoolean(),
         ISSUING_JURISDICTION to randomString(),
         NATIONALITY to randomString(),
         RESIDENT_CITY to randomString(),
