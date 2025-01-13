@@ -71,8 +71,20 @@ object MobileDrivingLicenceDataElements {
     /** The year when the mDL holder was born. */
     const val AGE_BIRTH_YEAR = "age_birth_year"
 
+    /** Age attestation: Over 12 years old? */
+    const val AGE_OVER_12 = "age_over_12"
+
+    /** Age attestation: Over 14 years old? */
+    const val AGE_OVER_14 = "age_over_14"
+
+    /** Age attestation: Over 16 years old? */
+    const val AGE_OVER_16 = "age_over_16"
+
     /** Age attestation: Over 18 years old? */
     const val AGE_OVER_18 = "age_over_18"
+
+    /** Age attestation: Over 21 years old? */
+    const val AGE_OVER_21 = "age_over_21"
 
     /** Country subdivision code of the jurisdiction that issued the mDL as defined in ISO 3166-2:2020, Clause 8. */
     const val ISSUING_JURISDICTION = "issuing_jurisdiction"
@@ -124,7 +136,11 @@ object MobileDrivingLicenceDataElements {
         PORTRAIT_CAPTURE_DATE,
         AGE_IN_YEARS,
         AGE_BIRTH_YEAR,
+        AGE_OVER_12,
+        AGE_OVER_14,
+        AGE_OVER_16,
         AGE_OVER_18,
+        AGE_OVER_21,
         ISSUING_JURISDICTION,
         NATIONALITY,
         RESIDENT_CITY,
