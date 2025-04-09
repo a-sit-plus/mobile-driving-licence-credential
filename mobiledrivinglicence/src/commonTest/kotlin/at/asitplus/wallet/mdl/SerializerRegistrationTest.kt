@@ -105,7 +105,7 @@ class SerializerRegistrationTest : FreeSpec({
         val claims = dataMap()
         val namespacedItems: Map<String, List<IssuerSignedItem>> =
             mapOf(MobileDrivingLicenceScheme.isoNamespace to claims.map { it.toIssuerSignedItem() }.toList())
-        val issuerAuth = CoseSigned.create(CoseHeader(),null, mso, CryptoSignature.RSAorHMAC(byteArrayOf(1,3,3,7)),
+        val issuerAuth = CoseSigned.create(CoseHeader(),null, mso, CryptoSignature.RSA(byteArrayOf(1,3,3,7)),
             MobileSecurityObject.serializer()
         )
         val credential = SubjectCredentialStore.StoreEntry.Iso(
