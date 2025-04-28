@@ -74,6 +74,9 @@ object MobileDrivingLicenceDataElements {
     /** Age attestation: Over 12 years old? */
     const val AGE_OVER_12 = "age_over_12"
 
+    /** Age attestation: Over 13 years old? */
+    const val AGE_OVER_13 = "age_over_13"
+
     /** Age attestation: Over 14 years old? */
     const val AGE_OVER_14 = "age_over_14"
 
@@ -85,6 +88,21 @@ object MobileDrivingLicenceDataElements {
 
     /** Age attestation: Over 21 years old? */
     const val AGE_OVER_21 = "age_over_21"
+
+    /** Age attestation: Over 25 years old? */
+    const val AGE_OVER_25 = "age_over_25"
+
+    /** Age attestation: Over 60 years old? */
+    const val AGE_OVER_60 = "age_over_60"
+
+    /** Age attestation: Over 62 years old? */
+    const val AGE_OVER_62 = "age_over_62"
+
+    /** Age attestation: Over 65 years old? */
+    const val AGE_OVER_65 = "age_over_65"
+
+    /** Age attestation: Over 68 years old? */
+    const val AGE_OVER_68 = "age_over_68"
 
     /** Country subdivision code of the jurisdiction that issued the mDL as defined in ISO 3166-2:2020, Clause 8. */
     const val ISSUING_JURISDICTION = "issuing_jurisdiction"
@@ -113,6 +131,18 @@ object MobileDrivingLicenceDataElements {
     /** Image of the signature or usual mark of the mDL holder. */
     const val SIGNATURE_USUAL_MARK = "signature_usual_mark"
 
+    /** This element contains optional facial information of the mDL holder. */
+    const val BIOMETRIC_TEMPLATE_FACE = "biometric_template_face"
+
+    /** This element contains optional fingerprint information of the mDL holder. */
+    const val BIOMETRIC_TEMPLATE_FINGER = "biometric_template_finger"
+
+    /** This element contains optional signature/sign information of the mDL holder. */
+    const val BIOMETRIC_TEMPLATE_SIGNATURE_SIGN = "biometric_template_signature_sign"
+
+    /** This element contains optional iris information of the mDL holder. */
+    const val BIOMETRIC_TEMPLATE_IRIS = "biometric_template_iris"
+
     val ALL_ELEMENTS = listOf(
         FAMILY_NAME,
         GIVEN_NAME,
@@ -137,10 +167,16 @@ object MobileDrivingLicenceDataElements {
         AGE_IN_YEARS,
         AGE_BIRTH_YEAR,
         AGE_OVER_12,
+        AGE_OVER_13,
         AGE_OVER_14,
         AGE_OVER_16,
         AGE_OVER_18,
         AGE_OVER_21,
+        AGE_OVER_25,
+        AGE_OVER_60,
+        AGE_OVER_62,
+        AGE_OVER_65,
+        AGE_OVER_68,
         ISSUING_JURISDICTION,
         NATIONALITY,
         RESIDENT_CITY,
@@ -150,6 +186,10 @@ object MobileDrivingLicenceDataElements {
         FAMILY_NAME_NATIONAL_CHARACTER,
         GIVEN_NAME_NATIONAL_CHARACTER,
         SIGNATURE_USUAL_MARK,
+        BIOMETRIC_TEMPLATE_FACE,
+        BIOMETRIC_TEMPLATE_FINGER,
+        BIOMETRIC_TEMPLATE_SIGNATURE_SIGN,
+        BIOMETRIC_TEMPLATE_IRIS,
     )
 
     val MANDATORY_ELEMENTS = listOf(

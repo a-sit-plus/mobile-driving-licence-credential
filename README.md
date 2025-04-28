@@ -38,10 +38,16 @@ These attributes are implemented:
 - `age_in_years`
 - `age_birth_year`
 - `age_over_12`
+- `age_over_13`
 - `age_over_14`
 - `age_over_16`
 - `age_over_18`
 - `age_over_21`
+- `age_over_25`
+- `age_over_60`
+- `age_over_62`
+- `age_over_65`
+- `age_over_68`
 - `issuing_jurisdiction`
 - `nationality`
 - `resident_city`
@@ -51,8 +57,15 @@ These attributes are implemented:
 - `family_name_national_character`
 - `given_name_national_character`
 - `signature_usual_mark`
+- `biometric_template_face`
+- `biometric_template_finger`
+- `biometric_template_signature_sign`
+- `biometric_template_iris`
 
 ## Changelog
+
+Release 1.1.5:
+- Add additional claims: `age_over_13`, `age_over_25`, `age_over_60`, `age_over_62`, `age_over_65`, `age_over_68`, `biometric_template_face`, `biometric_template_finger`, `biometric_template_signature_sign`, `biometric_template_iris`
 
 Release 1.1.4:
 - Add additional claims: `age_over_12`, `age_over_14`, `age_over_16`, `age_over_21`

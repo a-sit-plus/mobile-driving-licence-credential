@@ -40,10 +40,20 @@ object Initializer {
                 MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR to UInt.serializer(),
                 MobileDrivingLicenceDataElements.SIGNATURE_USUAL_MARK to ByteArraySerializer(),
                 MobileDrivingLicenceDataElements.AGE_OVER_12 to Boolean.serializer(),
+                MobileDrivingLicenceDataElements.AGE_OVER_13 to Boolean.serializer(),
                 MobileDrivingLicenceDataElements.AGE_OVER_14 to Boolean.serializer(),
                 MobileDrivingLicenceDataElements.AGE_OVER_16 to Boolean.serializer(),
                 MobileDrivingLicenceDataElements.AGE_OVER_18 to Boolean.serializer(),
                 MobileDrivingLicenceDataElements.AGE_OVER_21 to Boolean.serializer(),
+                MobileDrivingLicenceDataElements.AGE_OVER_25 to Boolean.serializer(),
+                MobileDrivingLicenceDataElements.AGE_OVER_60 to Boolean.serializer(),
+                MobileDrivingLicenceDataElements.AGE_OVER_62 to Boolean.serializer(),
+                MobileDrivingLicenceDataElements.AGE_OVER_65 to Boolean.serializer(),
+                MobileDrivingLicenceDataElements.AGE_OVER_68 to Boolean.serializer(),
+                MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_FACE to ByteArraySerializer(),
+                MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_FINGER to ByteArraySerializer(),
+                MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_SIGNATURE_SIGN to ByteArraySerializer(),
+                MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_IRIS to ByteArraySerializer(),
             )
         )
     }
