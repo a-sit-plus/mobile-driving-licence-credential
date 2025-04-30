@@ -7,7 +7,6 @@ import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseKeyParams
 import at.asitplus.signum.indispensable.cosef.CoseKeyType
 import at.asitplus.signum.indispensable.cosef.CoseSigned
-import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
 import at.asitplus.wallet.lib.agent.SubjectCredentialStore
 import at.asitplus.wallet.lib.data.CredentialToJsonConverter
 import at.asitplus.wallet.lib.iso.DeviceKeyInfo
@@ -21,10 +20,20 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NU
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_IN_YEARS
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_12
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_13
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_14
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_16
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_18
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_21
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_25
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_60
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_62
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_65
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_68
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_FACE
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_FINGER
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_IRIS
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_SIGNATURE_SIGN
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_PLACE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
@@ -63,7 +72,6 @@ import io.matthewnelson.encoding.base64.Base64
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlinx.serialization.json.JsonObject
 import kotlin.random.Random
 import kotlin.random.nextUInt
@@ -152,10 +160,16 @@ private fun dataMap(): Map<String, Any> =
         AGE_IN_YEARS to Random.nextUInt(1u, 99u),
         AGE_BIRTH_YEAR to Random.nextUInt(1900u, 2100u),
         AGE_OVER_12 to Random.nextBoolean(),
+        AGE_OVER_13 to Random.nextBoolean(),
         AGE_OVER_14 to Random.nextBoolean(),
         AGE_OVER_16 to Random.nextBoolean(),
         AGE_OVER_18 to Random.nextBoolean(),
         AGE_OVER_21 to Random.nextBoolean(),
+        AGE_OVER_25 to Random.nextBoolean(),
+        AGE_OVER_60 to Random.nextBoolean(),
+        AGE_OVER_62 to Random.nextBoolean(),
+        AGE_OVER_65 to Random.nextBoolean(),
+        AGE_OVER_68 to Random.nextBoolean(),
         ISSUING_JURISDICTION to randomString(),
         NATIONALITY to randomString(),
         RESIDENT_CITY to randomString(),
@@ -165,6 +179,10 @@ private fun dataMap(): Map<String, Any> =
         FAMILY_NAME_NATIONAL_CHARACTER to randomString(),
         GIVEN_NAME_NATIONAL_CHARACTER to randomString(),
         SIGNATURE_USUAL_MARK to Random.nextBytes(32),
+        BIOMETRIC_TEMPLATE_FACE to Random.nextBytes(32),
+        BIOMETRIC_TEMPLATE_FINGER to Random.nextBytes(32),
+        BIOMETRIC_TEMPLATE_SIGNATURE_SIGN to Random.nextBytes(32),
+        BIOMETRIC_TEMPLATE_IRIS to Random.nextBytes(32),
     )
 
 private fun randomString() = Random.nextBytes(16).encodeToString(Base64())

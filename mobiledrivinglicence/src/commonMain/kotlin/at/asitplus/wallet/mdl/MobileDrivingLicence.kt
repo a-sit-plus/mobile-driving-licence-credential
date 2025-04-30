@@ -7,10 +7,20 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NU
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_IN_YEARS
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_12
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_13
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_14
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_16
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_18
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_21
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_25
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_60
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_62
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_65
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_OVER_68
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_FACE
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_FINGER
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_IRIS
+import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIOMETRIC_TEMPLATE_SIGNATURE_SIGN
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.BIRTH_PLACE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
@@ -47,6 +57,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.ByteString
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.json.Json.Default.encodeToString
 
 
 /**
@@ -151,6 +162,10 @@ data class MobileDrivingLicence(
     @SerialName(AGE_OVER_12)
     val ageOver12: Boolean? = null,
 
+    /** Age attestation: Over 13 years old? */
+    @SerialName(AGE_OVER_13)
+    val ageOver13: Boolean? = null,
+
     /** Age attestation: Over 14 years old? */
     @SerialName(AGE_OVER_14)
     val ageOver14: Boolean? = null,
@@ -166,6 +181,26 @@ data class MobileDrivingLicence(
     /** Age attestation: Over 21 years old? */
     @SerialName(AGE_OVER_21)
     val ageOver21: Boolean? = null,
+
+    /** Age attestation: Over 25 years old? */
+    @SerialName(AGE_OVER_25)
+    val ageOver25: Boolean? = null,
+
+    /** Age attestation: Over 60 years old? */
+    @SerialName(AGE_OVER_60)
+    val ageOver60: Boolean? = null,
+
+    /** Age attestation: Over 62 years old? */
+    @SerialName(AGE_OVER_62)
+    val ageOver62: Boolean? = null,
+
+    /** Age attestation: Over 65 years old? */
+    @SerialName(AGE_OVER_65)
+    val ageOver65: Boolean? = null,
+
+    /** Age attestation: Over 68 years old? */
+    @SerialName(AGE_OVER_68)
+    val ageOver68: Boolean? = null,
 
     /** Country subdivision code of the jurisdiction that issued the mDL as defined in ISO 3166-2:2020, Clause 8. */
     @SerialName(ISSUING_JURISDICTION)
@@ -204,7 +239,32 @@ data class MobileDrivingLicence(
     @SerialName(SIGNATURE_USUAL_MARK)
     @Serializable(with = ByteArrayBase64UrlSerializer::class)
     val signatureOrUsualMark: ByteArray? = null,
-) {
+
+    /** This element contains optional facial information of the mDL holder. */
+    @ByteString
+    @SerialName(BIOMETRIC_TEMPLATE_FACE)
+    @Serializable(with = ByteArrayBase64UrlSerializer::class)
+    val biometricTemplateFace: ByteArray? = null,
+
+    /** This element contains optional fingerprint information of the mDL holder. */
+    @ByteString
+    @SerialName(BIOMETRIC_TEMPLATE_FINGER)
+    @Serializable(with = ByteArrayBase64UrlSerializer::class)
+    val biometricTemplateFinger: ByteArray? = null,
+
+    /** This element contains optional signature/sign information of the mDL holder. */
+    @ByteString
+    @SerialName(BIOMETRIC_TEMPLATE_SIGNATURE_SIGN)
+    @Serializable(with = ByteArrayBase64UrlSerializer::class)
+    val biometricTemplateSignatureSign: ByteArray? = null,
+
+    /** This element contains optional iris information of the mDL holder. */
+    @ByteString
+    @SerialName(BIOMETRIC_TEMPLATE_IRIS)
+    @Serializable(with = ByteArrayBase64UrlSerializer::class)
+    val biometricTemplateIris: ByteArray? = null,
+
+    ) {
     fun serialize() = vckCborSerializer.encodeToByteArray(this)
 
     override fun equals(other: Any?): Boolean {
@@ -213,6 +273,17 @@ data class MobileDrivingLicence(
 
         other as MobileDrivingLicence
 
+        if (ageOver12 != other.ageOver12) return false
+        if (ageOver13 != other.ageOver13) return false
+        if (ageOver14 != other.ageOver14) return false
+        if (ageOver16 != other.ageOver16) return false
+        if (ageOver18 != other.ageOver18) return false
+        if (ageOver21 != other.ageOver21) return false
+        if (ageOver25 != other.ageOver25) return false
+        if (ageOver60 != other.ageOver60) return false
+        if (ageOver62 != other.ageOver62) return false
+        if (ageOver65 != other.ageOver65) return false
+        if (ageOver68 != other.ageOver68) return false
         if (familyName != other.familyName) return false
         if (givenName != other.givenName) return false
         if (dateOfBirth != other.dateOfBirth) return false
@@ -222,7 +293,7 @@ data class MobileDrivingLicence(
         if (issuingAuthority != other.issuingAuthority) return false
         if (licenceNumber != other.licenceNumber) return false
         if (!portrait.contentEquals(other.portrait)) return false
-        if (drivingPrivileges != other.drivingPrivileges) return false
+        if (!drivingPrivileges.contentEquals(other.drivingPrivileges)) return false
         if (unDistinguishingSign != other.unDistinguishingSign) return false
         if (administrativeNumber != other.administrativeNumber) return false
         if (sex != other.sex) return false
@@ -235,7 +306,6 @@ data class MobileDrivingLicence(
         if (portraitImageTimestamp != other.portraitImageTimestamp) return false
         if (ageInYears != other.ageInYears) return false
         if (ageBirthYear != other.ageBirthYear) return false
-        if (ageOver18 != other.ageOver18) return false
         if (issuingJurisdiction != other.issuingJurisdiction) return false
         if (nationality != other.nationality) return false
         if (residentCity != other.residentCity) return false
@@ -244,16 +314,28 @@ data class MobileDrivingLicence(
         if (residentCountry != other.residentCountry) return false
         if (familyNameNationalCharacters != other.familyNameNationalCharacters) return false
         if (givenNameNationalCharacters != other.givenNameNationalCharacters) return false
-        if (signatureOrUsualMark != null) {
-            if (other.signatureOrUsualMark == null) return false
-            if (!signatureOrUsualMark.contentEquals(other.signatureOrUsualMark)) return false
-        } else if (other.signatureOrUsualMark != null) return false
+        if (!signatureOrUsualMark.contentEquals(other.signatureOrUsualMark)) return false
+        if (!biometricTemplateFace.contentEquals(other.biometricTemplateFace)) return false
+        if (!biometricTemplateFinger.contentEquals(other.biometricTemplateFinger)) return false
+        if (!biometricTemplateSignatureSign.contentEquals(other.biometricTemplateSignatureSign)) return false
+        if (!biometricTemplateIris.contentEquals(other.biometricTemplateIris)) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = familyName.hashCode()
+        var result = ageOver12?.hashCode() ?: 0
+        result = 31 * result + (ageOver13?.hashCode() ?: 0)
+        result = 31 * result + (ageOver14?.hashCode() ?: 0)
+        result = 31 * result + (ageOver16?.hashCode() ?: 0)
+        result = 31 * result + (ageOver18?.hashCode() ?: 0)
+        result = 31 * result + (ageOver21?.hashCode() ?: 0)
+        result = 31 * result + (ageOver25?.hashCode() ?: 0)
+        result = 31 * result + (ageOver60?.hashCode() ?: 0)
+        result = 31 * result + (ageOver62?.hashCode() ?: 0)
+        result = 31 * result + (ageOver65?.hashCode() ?: 0)
+        result = 31 * result + (ageOver68?.hashCode() ?: 0)
+        result = 31 * result + familyName.hashCode()
         result = 31 * result + givenName.hashCode()
         result = 31 * result + (dateOfBirth?.hashCode() ?: 0)
         result = 31 * result + issueDate.hashCode()
@@ -262,7 +344,7 @@ data class MobileDrivingLicence(
         result = 31 * result + (issuingAuthority?.hashCode() ?: 0)
         result = 31 * result + licenceNumber.hashCode()
         result = 31 * result + portrait.contentHashCode()
-        result = 31 * result + drivingPrivileges.hashCode()
+        result = 31 * result + drivingPrivileges.contentHashCode()
         result = 31 * result + (unDistinguishingSign?.hashCode() ?: 0)
         result = 31 * result + (administrativeNumber?.hashCode() ?: 0)
         result = 31 * result + (sex?.hashCode() ?: 0)
@@ -275,7 +357,6 @@ data class MobileDrivingLicence(
         result = 31 * result + (portraitImageTimestamp?.hashCode() ?: 0)
         result = 31 * result + (ageInYears?.hashCode() ?: 0)
         result = 31 * result + (ageBirthYear?.hashCode() ?: 0)
-        result = 31 * result + (ageOver18?.hashCode() ?: 0)
         result = 31 * result + (issuingJurisdiction?.hashCode() ?: 0)
         result = 31 * result + (nationality?.hashCode() ?: 0)
         result = 31 * result + (residentCity?.hashCode() ?: 0)
@@ -285,42 +366,62 @@ data class MobileDrivingLicence(
         result = 31 * result + (familyNameNationalCharacters?.hashCode() ?: 0)
         result = 31 * result + (givenNameNationalCharacters?.hashCode() ?: 0)
         result = 31 * result + (signatureOrUsualMark?.contentHashCode() ?: 0)
+        result = 31 * result + (biometricTemplateFace?.contentHashCode() ?: 0)
+        result = 31 * result + (biometricTemplateFinger?.contentHashCode() ?: 0)
+        result = 31 * result + (biometricTemplateSignatureSign?.contentHashCode() ?: 0)
+        result = 31 * result + (biometricTemplateIris?.contentHashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "MobileDrivingLicence(familyName='$familyName'," +
-                " givenName='$givenName'," +
-                " dateOfBirth=$dateOfBirth," +
-                " issueDate=$issueDate," +
-                " expiryDate=$expiryDate," +
-                " issuingCountry='$issuingCountry'," +
-                " issuingAuthority='$issuingAuthority'," +
-                " licenceNumber='$licenceNumber'," +
-                " portrait=${portrait.encodeToString(Base16(strict = true))}," +
-                " drivingPrivileges=${drivingPrivileges}," +
-                " unDistinguishingSign='$unDistinguishingSign'," +
-                " administrativeNumber=$administrativeNumber," +
-                " sex=$sex," +
-                " height=$height," +
-                " weight=$weight," +
-                " eyeColor=$eyeColor," +
-                " hairColor=$hairColor," +
-                " placeOfBirth=$placeOfBirth," +
-                " placeOfResidence=$placeOfResidence," +
-                " portraitImageTimestamp=$portraitImageTimestamp," +
-                " ageInYears=$ageInYears," +
-                " ageBirthYear=$ageBirthYear," +
-                " ageOver18=$ageOver18," +
-                " issuingJurisdiction=$issuingJurisdiction," +
-                " nationality=$nationality," +
-                " residentCity=$residentCity," +
-                " residentState=$residentState," +
-                " residentPostalCode=$residentPostalCode," +
-                " residentCountry=$residentCountry," +
-                " familyNameNationalCharacters=$familyNameNationalCharacters," +
-                " givenNameNationalCharacters=$givenNameNationalCharacters," +
-                " signatureOrUsualMark=${signatureOrUsualMark?.encodeToString(Base16(strict = true))})"
+        return "MobileDrivingLicence(" +
+                "familyName='$familyName', " +
+                "givenName='$givenName', " +
+                "dateOfBirth=$dateOfBirth, " +
+                "issueDate=$issueDate, " +
+                "expiryDate=$expiryDate, " +
+                "issuingCountry=$issuingCountry, " +
+                "issuingAuthority=$issuingAuthority, " +
+                "licenceNumber='$licenceNumber', " +
+                "portrait=${portrait?.encodeToString(Base16(strict = true))}, " +
+                "drivingPrivileges=${drivingPrivileges.contentToString()}, " +
+                "unDistinguishingSign=$unDistinguishingSign, " +
+                "administrativeNumber=$administrativeNumber, " +
+                "sex=$sex, " +
+                "height=$height, " +
+                "weight=$weight, " +
+                "eyeColor=$eyeColor, " +
+                "hairColor=$hairColor, " +
+                "placeOfBirth=$placeOfBirth, " +
+                "placeOfResidence=$placeOfResidence, " +
+                "portraitImageTimestamp=$portraitImageTimestamp, " +
+                "ageInYears=$ageInYears, " +
+                "ageBirthYear=$ageBirthYear, " +
+                "ageOver12=$ageOver12, " +
+                "ageOver13=$ageOver13, " +
+                "ageOver14=$ageOver14, " +
+                "ageOver16=$ageOver16, " +
+                "ageOver18=$ageOver18, " +
+                "ageOver21=$ageOver21, " +
+                "ageOver25=$ageOver25, " +
+                "ageOver60=$ageOver60, " +
+                "ageOver62=$ageOver62, " +
+                "ageOver65=$ageOver65, " +
+                "ageOver68=$ageOver68, " +
+                "issuingJurisdiction=$issuingJurisdiction, " +
+                "nationality=$nationality, " +
+                "residentCity=$residentCity, " +
+                "residentState=$residentState, " +
+                "residentPostalCode=$residentPostalCode, " +
+                "residentCountry=$residentCountry, " +
+                "familyNameNationalCharacters=$familyNameNationalCharacters, " +
+                "givenNameNationalCharacters=$givenNameNationalCharacters, " +
+                "signatureOrUsualMark=${signatureOrUsualMark?.encodeToString(Base16(strict = true))}, " +
+                "biometricTemplateFace=${biometricTemplateFace?.encodeToString(Base16(strict = true))}, " +
+                "biometricTemplateFinger=${biometricTemplateFinger?.encodeToString(Base16(strict = true))}, " +
+                "biometricTemplateSignatureSign=${biometricTemplateSignatureSign?.encodeToString(Base16(strict = true))}, " +
+                "biometricTemplateIris=${biometricTemplateIris?.encodeToString(Base16(strict = true))}" +
+                ")"
     }
 
     companion object {
