@@ -5,10 +5,10 @@ import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
 import at.asitplus.signum.indispensable.cosef.toCoseKey
-import at.asitplus.wallet.lib.agent.DefaultCryptoService
 import at.asitplus.wallet.lib.agent.EphemeralKeyWithoutCert
-import at.asitplus.wallet.lib.cbor.DefaultCoseService
-import at.asitplus.wallet.lib.cbor.DefaultVerifierCoseService
+import at.asitplus.wallet.lib.cbor.CoseHeaderCertificate
+import at.asitplus.wallet.lib.cbor.SignCose
+import at.asitplus.wallet.lib.cbor.VerifyCoseSignatureWithKey
 import at.asitplus.wallet.lib.iso.*
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
@@ -41,18 +41,16 @@ class IsoMdocTest : FreeSpec({
 
         val verifierRequest = verifier.buildDeviceRequest()
         val walletResponse = wallet.buildDeviceResponse(verifierRequest)
-        verifier.verifyResponse(walletResponse, issuer.cryptoService.keyMaterial.publicKey.toCoseKey().getOrThrow())
+        verifier.verifyResponse(walletResponse, issuer.keyMaterial.publicKey.toCoseKey().getOrThrow())
     }
 
 })
 
 class Wallet {
-
-    val cryptoService = DefaultCryptoService(EphemeralKeyWithoutCert())
-    val coseService = DefaultCoseService(cryptoService)
+    val keyMaterial = EphemeralKeyWithoutCert()
 
     val deviceKeyInfo = DeviceKeyInfo(
-        deviceKey =  cryptoService.keyMaterial.publicKey.toCoseKey().getOrThrow()
+        deviceKey =  keyMaterial.publicKey.toCoseKey().getOrThrow()
     )
 
     var storedMdl: MobileDrivingLicence? = null
@@ -111,12 +109,11 @@ class Wallet {
                     deviceSigned = DeviceSigned(
                         namespaces = ByteStringWrapper(DeviceNameSpaces(mapOf())),
                         deviceAuth = DeviceAuth(
-                            deviceSignature = coseService.createSignedCose(
-                                protectedHeader = null,
-                                payload = byteArrayOf(),
-                                serializer = ByteArraySerializer(),
-                                addKeyId = false,
-                                addCertificate = false,
+                            deviceSignature = SignCose<ByteArray>(keyMaterial)(
+                                null,
+                                null,
+                                byteArrayOf(),
+                                ByteArraySerializer(),
                             ).getOrThrow()
                         )
                     )
@@ -129,9 +126,7 @@ class Wallet {
 }
 
 class Issuer {
-
-    val cryptoService = DefaultCryptoService(EphemeralKeyWithoutCert())
-    val coseService = DefaultCoseService(cryptoService)
+    val keyMaterial = EphemeralKeyWithoutCert()
 
     suspend fun buildDeviceResponse(walletKeyInfo: DeviceKeyInfo): DeviceResponse {
         val drivingPrivilege = DrivingPrivilege(
@@ -177,11 +172,8 @@ class Issuer {
                         namespacedItems = mapOf(
                             MobileDrivingLicenceScheme.isoNamespace to issuerSigned
                         ),
-                        issuerAuth = coseService.createSignedCose(
-                            payload = mso,
-                            serializer = MobileSecurityObject.serializer(),
-                            addKeyId = false,
-                            addCertificate = true,
+                        issuerAuth = SignCose<MobileSecurityObject>(keyMaterial, null, CoseHeaderCertificate())(
+                            null, null, mso, MobileSecurityObject.serializer(),
                         ).getOrThrow()
                     ),
                     deviceSigned = DeviceSigned(
@@ -196,10 +188,7 @@ class Issuer {
 }
 
 class Verifier {
-
-    val cryptoService = DefaultCryptoService(EphemeralKeyWithoutCert())
-    val coseService = DefaultCoseService(cryptoService)
-    val verifierCoseService = DefaultVerifierCoseService()
+    val keyMaterial = EphemeralKeyWithoutCert()
 
     suspend fun buildDeviceRequest() = DeviceRequest(
         version = "1.0",
@@ -219,11 +208,11 @@ class Verifier {
                         )
                     )
                 ),
-                readerAuth = coseService.createSignedCose(
-                    unprotectedHeader = CoseHeader(),
-                    payload = byteArrayOf(),
-                    serializer = ByteArraySerializer(),
-                    addKeyId = false,
+                readerAuth = SignCose<ByteArray>(keyMaterial)(
+                    null,
+                    CoseHeader(),
+                    byteArrayOf(),
+                    ByteArraySerializer(),
                 ).getOrThrow()
             )
         )
@@ -236,7 +225,7 @@ class Verifier {
         doc.errors.shouldBeNull()
         val issuerSigned = doc.issuerSigned
         val issuerAuth = issuerSigned.issuerAuth
-        verifierCoseService.verifyCose(issuerAuth, issuerKey).isSuccess shouldBe true
+        VerifyCoseSignatureWithKey<MobileSecurityObject>()(issuerAuth, issuerKey, byteArrayOf(), null).isSuccess shouldBe true
         issuerAuth.payload.shouldNotBeNull()
         val mso = issuerSigned.issuerAuth.payload!!
 
@@ -245,7 +234,7 @@ class Verifier {
 
         val walletKey = mso.deviceKeyInfo.deviceKey
         val deviceSignature = doc.deviceSigned.deviceAuth.deviceSignature.shouldNotBeNull()
-        verifierCoseService.verifyCose(deviceSignature, walletKey).isSuccess shouldBe true
+        VerifyCoseSignatureWithKey<ByteArray>()(deviceSignature, walletKey, byteArrayOf(), null).isSuccess shouldBe true
         val namespaces = issuerSigned.namespaces.shouldNotBeNull()
         val issuerSignedItems = namespaces[MobileDrivingLicenceScheme.isoNamespace].shouldNotBeNull()
 
