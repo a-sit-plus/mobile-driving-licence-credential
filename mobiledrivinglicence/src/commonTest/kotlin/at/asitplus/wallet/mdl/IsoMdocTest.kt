@@ -32,7 +32,7 @@ import kotlin.random.Random
 
 class IsoMdocTest : FunSpec({
 
-    fun `issue, store, present, verify`() = runTest {
+    fun `issue and store and present and verify`() = runTest {
         val wallet = Wallet()
         val verifier = Verifier()
         val issuer = Issuer()
