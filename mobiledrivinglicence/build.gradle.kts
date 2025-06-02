@@ -26,6 +26,12 @@ kotlin {
                 api("at.asitplus.wallet:vck:5.6.0")
             }
         }
+
+        commonTest {
+            dependencies {
+                api("at.asitplus.wallet:openid-data-classes:5.7.0")
+            }
+        }
     }
 }
 
