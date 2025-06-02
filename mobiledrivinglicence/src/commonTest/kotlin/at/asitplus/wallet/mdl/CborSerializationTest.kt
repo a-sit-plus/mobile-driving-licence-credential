@@ -1,7 +1,7 @@
 package at.asitplus.wallet.mdl
 
 import at.asitplus.signum.indispensable.cosef.CoseSigned
-import at.asitplus.wallet.lib.iso.*
+import at.asitplus.iso.*
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
