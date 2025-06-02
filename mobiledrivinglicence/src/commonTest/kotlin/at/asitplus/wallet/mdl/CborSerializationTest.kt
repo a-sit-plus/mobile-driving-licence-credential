@@ -26,13 +26,6 @@ import kotlin.random.Random
 
 class CborSerializationTest : FreeSpec({
 
-    @OptIn(ExperimentalSerializationApi::class)
-    val cborSerializer = Cbor(from = Cbor.CoseCompliant) {
-        ignoreUnknownKeys = true
-        alwaysUseByteString = true
-        encodeDefaults = false
-    }
-
     "mDL" {
         val mdl = MobileDrivingLicence(
             familyName = "Mustermann",
@@ -113,7 +106,7 @@ class CborSerializationTest : FreeSpec({
             9bb7f80bf
         """.trimIndent().replace("\n", "").uppercase()
 
-        val deviceRequest = cborSerializer.decodeFromByteArray(
+        val deviceRequest = vckCborSerializer.decodeFromByteArray(
             DeviceRequest.serializer(),
             input.decodeToByteArray(Base16(true))
         ).shouldNotBeNull()
@@ -134,7 +127,7 @@ class CborSerializationTest : FreeSpec({
         docRequest.readerAuth.shouldNotBeNull()
         docRequest.readerAuth?.unprotectedHeader?.certificateChain?.shouldNotBeNull()
 
-        cborSerializer.encodeToByteArray(DeviceRequest.serializer(), deviceRequest)
+        vckCborSerializer.encodeToByteArray(DeviceRequest.serializer(), deviceRequest)
             .encodeToString(Base16(true)).uppercase() shouldBe input
     }
 
