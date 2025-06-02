@@ -2,6 +2,7 @@ package at.asitplus.wallet.mdl
 
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.iso.*
+import at.asitplus.wallet.lib.iso.*
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
@@ -19,9 +20,18 @@ import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.builtins.ByteArraySerializer
+import kotlinx.serialization.cbor.Cbor
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.random.Random
 
 class CborSerializationTest : FreeSpec({
+
+    @OptIn(ExperimentalSerializationApi::class)
+    val cborSerializer = Cbor(from = Cbor.CoseCompliant) {
+        ignoreUnknownKeys = true
+        alwaysUseByteString = true
+        encodeDefaults = false
+    }
 
     "mDL" {
         val mdl = MobileDrivingLicence(
@@ -103,8 +113,10 @@ class CborSerializationTest : FreeSpec({
             9bb7f80bf
         """.trimIndent().replace("\n", "").uppercase()
 
-        val deviceRequest = DeviceRequest.deserialize(input.decodeToByteArray(Base16(true)))
-            .getOrThrow().shouldNotBeNull()
+        val deviceRequest = cborSerializer.decodeFromByteArray(
+            DeviceRequest.serializer(),
+            input.decodeToByteArray(Base16(true))
+        ).shouldNotBeNull()
 
         deviceRequest.version shouldBe "1.0"
         val docRequest = deviceRequest.docRequests.first()
@@ -122,7 +134,8 @@ class CborSerializationTest : FreeSpec({
         docRequest.readerAuth.shouldNotBeNull()
         docRequest.readerAuth?.unprotectedHeader?.certificateChain?.shouldNotBeNull()
 
-        deviceRequest.serialize().encodeToString(Base16(true)).uppercase() shouldBe input
+        cborSerializer.encodeToByteArray(DeviceRequest.serializer(), deviceRequest)
+            .encodeToString(Base16(true)).uppercase() shouldBe input
     }
 
     // From ISO/IEC 18013-5:2021(E), D4.1.2, page 116
