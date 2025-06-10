@@ -11,7 +11,7 @@ pluginManagement {
 }
 
 if (System.getProperty("regressionTest") == "true") {
-    includeBuild("../signum") {
+    includeBuild("../../vck/signum") {
         dependencySubstitution {
             substitute(module("at.asitplus.wallet:indispensable")).using(project(":indispensable"))
             substitute(module("at.asitplus.signum:indispensable-josef")).using(project(":indispensable-josef"))
@@ -19,7 +19,7 @@ if (System.getProperty("regressionTest") == "true") {
             substitute(module("at.asitplus.signum:supreme")).using(project(":supreme"))
         }
     }
-    includeBuild("..") {
+    includeBuild("../../vck") {
         dependencySubstitution {
             substitute(module("at.asitplus.wallet:vck")).using(project(":vck"))
             substitute(module("at.asitplus.wallet:vck-openid")).using(project(":vck-openid"))

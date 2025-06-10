@@ -1,9 +1,8 @@
 package at.asitplus.wallet.mdl
 
+import at.asitplus.iso.ServerResponse
 import at.asitplus.signum.indispensable.josef.JwsSigned
 import at.asitplus.wallet.lib.data.vckJsonSerializer
-import at.asitplus.wallet.lib.iso.ServerRequest
-import at.asitplus.wallet.lib.iso.ServerResponse
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
@@ -45,7 +44,7 @@ class JsonSerializationTest : FreeSpec({
             }
         """.trimIndent()
 
-        val serverRequest = ServerRequest.deserialize(input).getOrThrow().shouldNotBeNull()
+        val serverRequest = vckJsonSerializer.decodeFromString<at.asitplus.iso.ServerRequest>(input)
 
         serverRequest.version shouldBe "1.0"
         val docRequest = serverRequest.docRequests[0]
@@ -165,7 +164,7 @@ class JsonSerializationTest : FreeSpec({
             }
         """.trimIndent()
 
-        val serverResponse = ServerResponse.deserialize(input).getOrThrow().shouldNotBeNull()
+        val serverResponse = vckJsonSerializer.decodeFromString<ServerResponse>(input)
 
         val payload = serverResponse.documents.first()
         val jws = JwsSigned.deserialize(payload).getOrThrow()

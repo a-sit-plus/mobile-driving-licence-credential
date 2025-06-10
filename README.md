@@ -64,6 +64,10 @@ These attributes are implemented:
 
 ## Changelog
 
+Release 1.2.0:
+ - VC-K 5.7.0
+ - Remove `serialize()` and `deserialize()` methods in data classes
+
 Release 1.1.5:
 - Add additional claims: `age_over_13`, `age_over_25`, `age_over_60`, `age_over_62`, `age_over_65`, `age_over_68`, `biometric_template_face`, `biometric_template_finger`, `biometric_template_signature_sign`, `biometric_template_iris`
 

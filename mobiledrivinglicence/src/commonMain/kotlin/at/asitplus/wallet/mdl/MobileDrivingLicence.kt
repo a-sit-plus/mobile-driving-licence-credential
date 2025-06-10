@@ -1,8 +1,6 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.KmmResult.Companion.wrap
 import at.asitplus.signum.indispensable.io.ByteArrayBase64UrlSerializer
-import at.asitplus.wallet.lib.iso.vckCborSerializer
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_BIRTH_YEAR
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.AGE_IN_YEARS
@@ -55,9 +53,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.ByteString
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
-import kotlinx.serialization.json.Json.Default.encodeToString
 
 
 /**
@@ -263,9 +258,7 @@ data class MobileDrivingLicence(
     @SerialName(BIOMETRIC_TEMPLATE_IRIS)
     @Serializable(with = ByteArrayBase64UrlSerializer::class)
     val biometricTemplateIris: ByteArray? = null,
-
-    ) {
-    fun serialize() = vckCborSerializer.encodeToByteArray(this)
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -422,11 +415,5 @@ data class MobileDrivingLicence(
                 "biometricTemplateSignatureSign=${biometricTemplateSignatureSign?.encodeToString(Base16(strict = true))}, " +
                 "biometricTemplateIris=${biometricTemplateIris?.encodeToString(Base16(strict = true))}" +
                 ")"
-    }
-
-    companion object {
-        fun deserialize(it: ByteArray) = kotlin.runCatching {
-            vckCborSerializer.decodeFromByteArray<MobileDrivingLicence>(it)
-        }.wrap()
     }
 }

@@ -23,13 +23,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("at.asitplus.wallet:vck:5.6.0")
-            }
-        }
-
-        commonTest {
-            dependencies {
-                api("at.asitplus.wallet:openid-data-classes:5.7.0")
+                api("at.asitplus.wallet:vck:5.7.0-SNAPSHOT")
             }
         }
     }

@@ -1,5 +1,6 @@
 package at.asitplus.wallet.mdl
 
+import at.asitplus.iso.IssuerSignedItemSerializer
 import at.asitplus.signum.indispensable.CryptoSignature
 import at.asitplus.signum.indispensable.cosef.CoseEllipticCurve
 import at.asitplus.signum.indispensable.cosef.CoseHeader
@@ -7,6 +8,7 @@ import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseKeyParams
 import at.asitplus.signum.indispensable.cosef.CoseKeyType
 import at.asitplus.signum.indispensable.cosef.CoseSigned
+import at.asitplus.signum.indispensable.cosef.io.coseCompliantSerializer
 import at.asitplus.wallet.lib.agent.SubjectCredentialStore
 import at.asitplus.wallet.lib.data.CredentialToJsonConverter
 import at.asitplus.wallet.lib.iso.DeviceKeyInfo
@@ -80,12 +82,15 @@ class SerializerRegistrationTest : FreeSpec({
 
     "Serialization and deserialization" - {
         withData(nameFn = { " for ${it.key}" }, dataMap().entries) {
-
             val item = it.toIssuerSignedItem()
             val serialized = item.serialize(MobileDrivingLicenceScheme.isoNamespace)
 
-            val deserialized = IssuerSignedItem.deserialize(serialized, MobileDrivingLicenceScheme.isoNamespace,item.elementIdentifier)
-                .getOrThrow()
+            val deserialized = coseCompliantSerializer.decodeFromByteArray(
+                IssuerSignedItemSerializer(
+                    MobileDrivingLicenceScheme.isoNamespace,
+                    item.elementIdentifier
+                ), serialized
+            )
 
             deserialized.elementValue shouldBe it.value
         }
@@ -105,7 +110,8 @@ class SerializerRegistrationTest : FreeSpec({
         val claims = dataMap()
         val namespacedItems: Map<String, List<IssuerSignedItem>> =
             mapOf(MobileDrivingLicenceScheme.isoNamespace to claims.map { it.toIssuerSignedItem() }.toList())
-        val issuerAuth = CoseSigned.create(CoseHeader(),null, mso, CryptoSignature.RSA(byteArrayOf(1,3,3,7)),
+        val issuerAuth = CoseSigned.create(
+            CoseHeader(), null, mso, CryptoSignature.RSA(byteArrayOf(1, 3, 3, 7)),
             MobileSecurityObject.serializer()
         )
         val credential = SubjectCredentialStore.StoreEntry.Iso(
@@ -192,3 +198,7 @@ private fun randomLocalDate() = LocalDate(Random.nextInt(1900, 2100), Random.nex
 
 private fun deviceKeyInfo() =
     DeviceKeyInfo(CoseKey(CoseKeyType.EC2, keyParams = CoseKeyParams.EcYBoolParams(CoseEllipticCurve.P256)))
+
+
+private fun at.asitplus.iso.IssuerSignedItem.serialize(namespace: String): ByteArray =
+    coseCompliantSerializer.encodeToByteArray(IssuerSignedItemSerializer(namespace, elementIdentifier), this)

@@ -1,5 +1,20 @@
 package at.asitplus.wallet.mdl
 
+import at.asitplus.iso.DeviceAuth
+import at.asitplus.iso.DeviceKeyInfo
+import at.asitplus.iso.DeviceNameSpaces
+import at.asitplus.iso.DeviceRequest
+import at.asitplus.iso.DeviceSigned
+import at.asitplus.iso.DocRequest
+import at.asitplus.iso.IssuerSignedItem
+import at.asitplus.iso.IssuerSignedList
+import at.asitplus.iso.ItemsRequest
+import at.asitplus.iso.ItemsRequestList
+import at.asitplus.iso.SingleItemsRequest
+import at.asitplus.iso.ValidityInfo
+import at.asitplus.iso.ValueDigest
+import at.asitplus.iso.ValueDigestList
+import at.asitplus.iso.sha256
 import at.asitplus.signum.indispensable.cosef.CoseHeader
 import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseSigned
@@ -9,8 +24,10 @@ import at.asitplus.wallet.lib.agent.EphemeralKeyWithoutCert
 import at.asitplus.wallet.lib.cbor.CoseHeaderCertificate
 import at.asitplus.wallet.lib.cbor.SignCose
 import at.asitplus.wallet.lib.cbor.VerifyCoseSignatureWithKey
-import at.asitplus.iso.*
-import at.asitplus.wallet.lib.iso.*
+import at.asitplus.wallet.lib.iso.DeviceResponse
+import at.asitplus.wallet.lib.iso.Document
+import at.asitplus.wallet.lib.iso.IssuerSigned
+import at.asitplus.wallet.lib.iso.MobileSecurityObject
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
@@ -52,7 +69,7 @@ class Wallet {
     val keyMaterial = EphemeralKeyWithoutCert()
 
     val deviceKeyInfo = DeviceKeyInfo(
-        deviceKey =  keyMaterial.publicKey.toCoseKey().getOrThrow()
+        deviceKey = keyMaterial.publicKey.toCoseKey().getOrThrow()
     )
 
     var storedMdl: MobileDrivingLicence? = null
