@@ -64,6 +64,9 @@ These attributes are implemented:
 
 ## Changelog
 
+Next
+ - Gradle 8.14.2
+
 Release 1.2.0:
  - VC-K 5.7.0
  - Remove `serialize()` and `deserialize()` methods in data classes
