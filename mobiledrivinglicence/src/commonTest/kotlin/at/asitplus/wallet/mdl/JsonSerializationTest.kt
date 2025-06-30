@@ -21,6 +21,7 @@ import kotlin.random.Random
 
 class JsonSerializationTest : FreeSpec({
 
+    Initializer.initWithVCK()
 
     // from ISO/IEC 18013-5:2021(E), D4.2.1.1, page 120
     "Server Request" {

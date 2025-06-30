@@ -50,6 +50,8 @@ import kotlin.random.Random
 
 class IsoMdocTest : FunSpec({
 
+    Initializer.initWithVCK()
+
     fun `issue and store and present and verify`() = runTest {
         val wallet = Wallet()
         val verifier = Verifier()

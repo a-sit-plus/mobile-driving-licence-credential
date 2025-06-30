@@ -26,6 +26,7 @@ import kotlinx.serialization.encodeToByteArray
 import kotlin.random.Random
 
 class CborSerializationTest : FreeSpec({
+    Initializer.initWithVCK()
 
     "mDL" {
         val mdl = MobileDrivingLicence(

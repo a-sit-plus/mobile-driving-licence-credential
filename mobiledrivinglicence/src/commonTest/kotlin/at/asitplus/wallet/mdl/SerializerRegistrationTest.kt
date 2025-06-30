@@ -80,6 +80,8 @@ import kotlin.random.nextUInt
 
 class SerializerRegistrationTest : FreeSpec({
 
+    Initializer.initWithVCK()
+
     "Serialization and deserialization" - {
         withData(nameFn = { " for ${it.key}" }, dataMap().entries) {
             val item = it.toIssuerSignedItem()
