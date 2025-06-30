@@ -1,8 +1,8 @@
 plugins {
+    id("at.asitplus.gradle.conventions") version "20250628"
     id("io.kotest.multiplatform") version libs.versions.kotest
     kotlin("multiplatform") version libs.versions.kotlin apply false
     kotlin("plugin.serialization") version libs.versions.kotlin apply false
-    id("at.asitplus.gradle.conventions") version "20250628"
 }
 
 val artifactVersion: String by extra
