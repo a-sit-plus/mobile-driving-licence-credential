@@ -1,11 +1,15 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.iso.DeviceRequest
 import at.asitplus.iso.IssuerSignedItemSerializer
+import at.asitplus.iso.IssuerSignedList
+import at.asitplus.iso.ItemsRequestList
+import at.asitplus.iso.ValueDigestList
+import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.Base16Strict
 import at.asitplus.signum.indispensable.cosef.io.coseCompliantSerializer
-import at.asitplus.wallet.lib.iso.*
+import at.asitplus.wallet.lib.iso.DeviceResponse
+import at.asitplus.wallet.lib.iso.MobileSecurityObject
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE

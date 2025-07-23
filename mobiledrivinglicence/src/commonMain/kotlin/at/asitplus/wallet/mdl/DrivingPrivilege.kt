@@ -2,15 +2,11 @@
 
 package at.asitplus.wallet.mdl
 
-import at.asitplus.KmmResult.Companion.wrap
-import at.asitplus.wallet.lib.iso.vckCborSerializer
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.ValueTags
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
 
 /**
  * Part of the ISO/IEC 18013-5:2021 standard: Data structure for Driving privileges (7.2.4)
@@ -29,7 +25,6 @@ data class DrivingPrivilege(
     @SerialName("codes")
     val codes: Array<DrivingPrivilegeCode>? = null,
 ) {
-    fun serialize() = vckCborSerializer.encodeToByteArray(this)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false
@@ -54,12 +49,6 @@ data class DrivingPrivilege(
         result = 31 * result + (codes?.contentHashCode() ?: 0)
         return result
     }
-
-    companion object {
-        fun deserialize(it: ByteArray) = kotlin.runCatching {
-            vckCborSerializer.decodeFromByteArray<DrivingPrivilege>(it)
-        }.wrap()
-    }
 }
 
 @Serializable
@@ -70,12 +59,4 @@ data class DrivingPrivilegeCode(
     val sign: String? = null,
     @SerialName("value")
     val value: String? = null,
-) {
-    fun serialize() = vckCborSerializer.encodeToByteArray(this)
-
-    companion object {
-        fun deserialize(it: ByteArray) = kotlin.runCatching {
-            vckCborSerializer.decodeFromByteArray<DrivingPrivilegeCode>(it)
-        }.wrap()
-    }
-}
+)
