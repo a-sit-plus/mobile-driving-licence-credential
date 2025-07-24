@@ -23,7 +23,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("at.asitplus.wallet:vck:5.7.0")
+                api(libs.vck)
             }
         }
     }
@@ -71,6 +71,11 @@ publishing {
     }
     repositories {
         mavenLocal {
+            signing.isRequired = false
+        }
+        maven {
+            url = uri(rootProject.layout.projectDirectory.dir("..").dir("repo"))
+            name = "local"
             signing.isRequired = false
         }
     }

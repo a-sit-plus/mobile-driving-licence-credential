@@ -35,24 +35,22 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.GIVEN_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
-import io.kotest.core.spec.style.FunSpec
+import at.asitplus.test.FreeSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.matthewnelson.encoding.base16.Base16
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
-import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlin.random.Random
+val inited=    Initializer.initWithVCK()
+class IsoMdocTest : FreeSpec({
 
-class IsoMdocTest : FunSpec({
 
-    Initializer.initWithVCK()
-
-    fun `issue and store and present and verify`() = runTest {
+    "issue and store and present and verify"  {
         val wallet = Wallet()
         val verifier = Verifier()
         val issuer = Issuer()

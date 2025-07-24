@@ -9,7 +9,7 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
-import io.kotest.core.spec.style.FreeSpec
+import at.asitplus.test.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -18,9 +18,9 @@ import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDate
 import kotlin.random.Random
 
+private val init = inited
 class JsonSerializationTest : FreeSpec({
 
-    Initializer.initWithVCK()
 
     // from ISO/IEC 18013-5:2021(E), D4.2.1.1, page 120
     "Server Request" {

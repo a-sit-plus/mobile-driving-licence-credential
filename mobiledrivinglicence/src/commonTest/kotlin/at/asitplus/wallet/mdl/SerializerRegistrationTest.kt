@@ -65,22 +65,22 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.SIGNATURE_USUAL_M
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.UN_DISTINGUISHING_SIGN
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.WEIGHT
 import io.kotest.assertions.withClue
-import io.kotest.core.spec.style.FreeSpec
+import at.asitplus.test.FreeSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.matthewnelson.encoding.base64.Base64
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.JsonObject
 import kotlin.random.Random
 import kotlin.random.nextUInt
 
+private val init = inited
 class SerializerRegistrationTest : FreeSpec({
 
-    Initializer.initWithVCK()
 
     "Serialization and deserialization" - {
         withData(nameFn = { " for ${it.key}" }, dataMap().entries) {

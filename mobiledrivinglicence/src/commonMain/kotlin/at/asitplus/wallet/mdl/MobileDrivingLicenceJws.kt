@@ -2,7 +2,7 @@ package at.asitplus.wallet.mdl
 
 import at.asitplus.signum.indispensable.cosef.InstantLongSerializer
 import at.asitplus.wallet.lib.data.NullableInstantLongSerializer
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

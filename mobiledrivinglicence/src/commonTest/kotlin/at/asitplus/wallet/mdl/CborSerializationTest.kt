@@ -16,21 +16,22 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
-import io.kotest.core.spec.style.FreeSpec
+import at.asitplus.test.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlin.random.Random
 
+private val init = inited
 class CborSerializationTest : FreeSpec({
-    Initializer.initWithVCK()
+
 
     "mDL" {
         val mdl = MobileDrivingLicence(
