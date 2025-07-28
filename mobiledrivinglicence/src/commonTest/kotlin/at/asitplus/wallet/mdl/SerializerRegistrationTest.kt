@@ -65,7 +65,7 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.SIGNATURE_USUAL_M
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.UN_DISTINGUISHING_SIGN
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.WEIGHT
 import io.kotest.assertions.withClue
-import at.asitplus.test.FreeSpec
+import io.kotest.core.spec.style.FreeSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -78,7 +78,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlin.random.Random
 import kotlin.random.nextUInt
 
-private val init = inited
 class SerializerRegistrationTest : FreeSpec({
 
 
