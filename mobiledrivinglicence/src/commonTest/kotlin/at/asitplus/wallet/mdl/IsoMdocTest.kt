@@ -4,12 +4,16 @@ import at.asitplus.iso.DeviceAuth
 import at.asitplus.iso.DeviceKeyInfo
 import at.asitplus.iso.DeviceNameSpaces
 import at.asitplus.iso.DeviceRequest
+import at.asitplus.iso.DeviceResponse
 import at.asitplus.iso.DeviceSigned
 import at.asitplus.iso.DocRequest
+import at.asitplus.iso.Document
+import at.asitplus.iso.IssuerSigned
 import at.asitplus.iso.IssuerSignedItem
 import at.asitplus.iso.IssuerSignedList
 import at.asitplus.iso.ItemsRequest
 import at.asitplus.iso.ItemsRequestList
+import at.asitplus.iso.MobileSecurityObject
 import at.asitplus.iso.SingleItemsRequest
 import at.asitplus.iso.ValidityInfo
 import at.asitplus.iso.ValueDigest
@@ -24,10 +28,6 @@ import at.asitplus.wallet.lib.agent.EphemeralKeyWithoutCert
 import at.asitplus.wallet.lib.cbor.CoseHeaderCertificate
 import at.asitplus.wallet.lib.cbor.SignCose
 import at.asitplus.wallet.lib.cbor.VerifyCoseSignatureWithKey
-import at.asitplus.wallet.lib.iso.DeviceResponse
-import at.asitplus.wallet.lib.iso.Document
-import at.asitplus.wallet.lib.iso.IssuerSigned
-import at.asitplus.wallet.lib.iso.MobileSecurityObject
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
@@ -42,10 +42,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.matthewnelson.encoding.base16.Base16
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
-import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlin.random.Random
+import kotlin.time.Clock
+
 class IsoMdocTest : FreeSpec({
 
 
