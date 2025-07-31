@@ -16,7 +16,6 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.encodeToString
 import kotlin.random.Random
 
 class JsonSerializationTest : FreeSpec({
@@ -169,7 +168,7 @@ class JsonSerializationTest : FreeSpec({
         val payload = serverResponse.documents.first()
         val jws = JwsSigned.deserialize(payload).getOrThrow()
 
-        val mdlJws = MobileDrivingLicenceJws.deserialize(jws.payload.decodeToString()).getOrThrow().shouldNotBeNull()
+        val mdlJws = vckJsonSerializer.decodeFromString<MobileDrivingLicenceJws>(jws.payload.decodeToString())
 
         mdlJws.doctype shouldBe MobileDrivingLicenceScheme.isoDocType
         val mdl = mdlJws.namespaces.mdl
