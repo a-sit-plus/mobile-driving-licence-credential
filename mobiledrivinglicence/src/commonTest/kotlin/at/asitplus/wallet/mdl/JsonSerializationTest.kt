@@ -2,6 +2,7 @@ package at.asitplus.wallet.mdl
 
 import at.asitplus.iso.ServerResponse
 import at.asitplus.signum.indispensable.josef.JwsSigned
+import at.asitplus.testballoon.invoke
 import at.asitplus.wallet.lib.data.vckJsonSerializer
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
@@ -9,6 +10,7 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
+import de.infix.testBalloon.framework.core.testSuite
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
@@ -18,7 +20,7 @@ import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.LocalDate
 import kotlin.random.Random
 
-class JsonSerializationTest : FreeSpec({
+val JsonSerializationTest by testSuite {
 
 
     // from ISO/IEC 18013-5:2021(E), D4.2.1.1, page 120
@@ -189,4 +191,4 @@ class JsonSerializationTest : FreeSpec({
             expiryDate = LocalDate.parse("2024-10-20")
         )
     }
-})
+}

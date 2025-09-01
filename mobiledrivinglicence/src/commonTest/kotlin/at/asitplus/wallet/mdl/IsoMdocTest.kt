@@ -1,33 +1,16 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.iso.DeviceAuth
-import at.asitplus.iso.DeviceKeyInfo
-import at.asitplus.iso.DeviceNameSpaces
-import at.asitplus.iso.DeviceRequest
-import at.asitplus.iso.DeviceSigned
-import at.asitplus.iso.DocRequest
-import at.asitplus.iso.IssuerSignedItem
-import at.asitplus.iso.IssuerSignedList
-import at.asitplus.iso.ItemsRequest
-import at.asitplus.iso.ItemsRequestList
-import at.asitplus.iso.SingleItemsRequest
-import at.asitplus.iso.ValidityInfo
-import at.asitplus.iso.ValueDigest
-import at.asitplus.iso.ValueDigestList
-import at.asitplus.iso.sha256
+import at.asitplus.iso.*
 import at.asitplus.signum.indispensable.cosef.CoseHeader
 import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
 import at.asitplus.signum.indispensable.cosef.toCoseKey
+import at.asitplus.testballoon.invoke
 import at.asitplus.wallet.lib.agent.EphemeralKeyWithoutCert
 import at.asitplus.wallet.lib.cbor.CoseHeaderCertificate
 import at.asitplus.wallet.lib.cbor.SignCose
 import at.asitplus.wallet.lib.cbor.VerifyCoseSignatureWithKey
-import at.asitplus.wallet.lib.iso.DeviceResponse
-import at.asitplus.wallet.lib.iso.Document
-import at.asitplus.wallet.lib.iso.IssuerSigned
-import at.asitplus.wallet.lib.iso.MobileSecurityObject
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
@@ -35,21 +18,21 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.GIVEN_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
-import io.kotest.core.spec.style.FreeSpec
+import de.infix.testBalloon.framework.core.testSuite
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.matthewnelson.encoding.base16.Base16
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
-import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlin.random.Random
-class IsoMdocTest : FreeSpec({
+import kotlin.time.Clock
 
+val IsoMdocTest by testSuite {
 
-    "issue and store and present and verify"  {
+    "issue and store and present and verify" {
         val wallet = Wallet()
         val verifier = Verifier()
         val issuer = Issuer()
@@ -62,7 +45,7 @@ class IsoMdocTest : FreeSpec({
         verifier.verifyResponse(walletResponse, issuer.keyMaterial.publicKey.toCoseKey().getOrThrow())
     }
 
-})
+}
 
 class Wallet {
     val keyMaterial = EphemeralKeyWithoutCert()
@@ -243,7 +226,12 @@ class Verifier {
         doc.errors.shouldBeNull()
         val issuerSigned = doc.issuerSigned
         val issuerAuth = issuerSigned.issuerAuth
-        VerifyCoseSignatureWithKey<MobileSecurityObject>()(issuerAuth, issuerKey, byteArrayOf(), null).isSuccess shouldBe true
+        VerifyCoseSignatureWithKey<MobileSecurityObject>()(
+            issuerAuth,
+            issuerKey,
+            byteArrayOf(),
+            null
+        ).isSuccess shouldBe true
         issuerAuth.payload.shouldNotBeNull()
         val mso = issuerSigned.issuerAuth.payload!!
 

@@ -1,13 +1,12 @@
 plugins {
     val kotlinVer = System.getenv("KOTLIN_VERSION_ENV")?.ifBlank { null } ?: libs.versions.kotlin.get()
-    val kotestVer = System.getenv("KOTEST_VERSION_ENV")?.ifBlank { null } ?: libs.versions.kotest.get()
-    val kspVer = System.getenv("KSP_VERSION_ENV")?.ifBlank { null } ?: "$kotlinVer-${libs.versions.ksp.get()}"
+    val testballoonVer = System.getenv("TESTBALLOON_VERSION_OVERRIDE")?.ifBlank { null } ?: libs.versions.testballoon.get()
 
-    id("at.asitplus.gradle.conventions") version "20250728"
-    id("io.kotest") version kotestVer
+    alias(libs.plugins.asp)
     kotlin("multiplatform") version kotlinVer apply false
     kotlin("plugin.serialization") version kotlinVer apply false
-    id("com.google.devtools.ksp") version kspVer
+    id("de.infix.testBalloon") version testballoonVer apply false
+
 }
 
 val artifactVersion: String by extra
