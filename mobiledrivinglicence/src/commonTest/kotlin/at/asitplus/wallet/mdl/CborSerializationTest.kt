@@ -1,35 +1,30 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.iso.DeviceRequest
-import at.asitplus.iso.DeviceResponse
-import at.asitplus.iso.IssuerSignedItemSerializer
-import at.asitplus.iso.IssuerSignedList
-import at.asitplus.iso.ItemsRequestList
-import at.asitplus.iso.MobileSecurityObject
-import at.asitplus.iso.ValueDigestList
+import at.asitplus.iso.*
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.Base16Strict
 import at.asitplus.signum.indispensable.cosef.io.coseCompliantSerializer
+import at.asitplus.testballoon.invoke
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
-import io.kotest.core.spec.style.FreeSpec
+import de.infix.testBalloon.framework.testSuite
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
-import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlin.random.Random
+import kotlin.time.Instant
 
-class CborSerializationTest : FreeSpec({
+val CborSerializationTest by testSuite {
 
 
     "mDL" {
@@ -617,7 +612,7 @@ class CborSerializationTest : FreeSpec({
         coseSigned.serialize(MobileSecurityObject.serializer()).encodeToString(Base16Strict) shouldBe input
     }
 
-})
+}
 
 private fun ItemsRequestList.findItem(key: String) =
     entries.first { it.key == key }.value

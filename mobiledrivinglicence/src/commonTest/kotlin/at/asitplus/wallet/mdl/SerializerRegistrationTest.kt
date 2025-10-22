@@ -1,21 +1,12 @@
 package at.asitplus.wallet.mdl
 
-import at.asitplus.iso.DeviceKeyInfo
-import at.asitplus.iso.IssuerSigned
-import at.asitplus.iso.IssuerSignedItem
-import at.asitplus.iso.IssuerSignedItemSerializer
-import at.asitplus.iso.MobileSecurityObject
-import at.asitplus.iso.ValidityInfo
-import at.asitplus.iso.ValueDigest
-import at.asitplus.iso.ValueDigestList
+import at.asitplus.iso.*
 import at.asitplus.signum.indispensable.CryptoSignature
-import at.asitplus.signum.indispensable.cosef.CoseEllipticCurve
-import at.asitplus.signum.indispensable.cosef.CoseHeader
-import at.asitplus.signum.indispensable.cosef.CoseKey
-import at.asitplus.signum.indispensable.cosef.CoseKeyParams
-import at.asitplus.signum.indispensable.cosef.CoseKeyType
-import at.asitplus.signum.indispensable.cosef.CoseSigned
+import at.asitplus.signum.indispensable.cosef.*
 import at.asitplus.signum.indispensable.cosef.io.coseCompliantSerializer
+import at.asitplus.testballoon.invoke
+import at.asitplus.testballoon.minus
+import at.asitplus.testballoon.withData
 import at.asitplus.wallet.lib.agent.SubjectCredentialStore
 import at.asitplus.wallet.lib.data.CredentialToJsonConverter
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
@@ -64,21 +55,20 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.SEX
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.SIGNATURE_USUAL_MARK
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.UN_DISTINGUISHING_SIGN
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.WEIGHT
+import de.infix.testBalloon.framework.testSuite
 import io.kotest.assertions.withClue
-import io.kotest.core.spec.style.FreeSpec
-import io.kotest.datatest.withData
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.matthewnelson.encoding.base64.Base64
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
-import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.JsonObject
 import kotlin.random.Random
 import kotlin.random.nextUInt
+import kotlin.time.Clock
 
-class SerializerRegistrationTest : FreeSpec({
+val SerializerRegistrationTest by testSuite {
 
 
     "Serialization and deserialization" - {
@@ -131,7 +121,7 @@ class SerializerRegistrationTest : FreeSpec({
         }
     }
 
-})
+}
 
 private fun Map.Entry<String, Any>.toIssuerSignedItem() =
     IssuerSignedItem(Random.nextUInt(), Random.nextBytes(32), key, value)
