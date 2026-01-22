@@ -92,7 +92,9 @@ class Wallet {
     suspend fun buildDeviceResponse(verifierRequest: DeviceRequest): DeviceResponse {
         val itemsRequest = verifierRequest.docRequests[0].itemsRequest
         val isoNamespace = itemsRequest.value.namespaces[MobileDrivingLicenceScheme.isoNamespace].shouldNotBeNull()
-        val requestedKeys = isoNamespace.entries.filter { it.value }.map { it.key }
+        val requestedKeys = isoNamespace.entries
+            .filter { it.intentToRetain }
+            .map { it.dataElementIdentifier }
 
         return DeviceResponse(
             version = "1.0",
