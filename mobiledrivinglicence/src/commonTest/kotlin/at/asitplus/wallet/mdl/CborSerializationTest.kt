@@ -616,7 +616,7 @@ val CborSerializationTest by testSuite {
 }
 
 private fun ItemsRequestList.findItem(key: String) =
-    entries.first { it.key == key }.value
+    entries.first { it.dataElementIdentifier == key }.intentToRetain
 
 private fun ValueDigestList.findItem(digestId: UInt) =
     entries.first { it.key == digestId }.value
