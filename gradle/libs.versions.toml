@@ -1,8 +1,9 @@
 [versions]
 kotlin = "2.3.0"
 vck = "5.10.0"
-testballoon = "0.7.1-K2.3.0"
-asp = "20251217"
+testballoon = "0.8.2-K2.3.0"
+testballoonAddons = "0.7.1"
+asp = "20260114"
 
 [libraries]
 vck = { module = "at.asitplus.wallet:vck", version.ref = "vck" }
