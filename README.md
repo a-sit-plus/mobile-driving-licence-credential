@@ -70,7 +70,7 @@ These attributes are implemented:
 
 Next:
  - Kotlin 2.3.0
- - VC-K 5.10.0
+ - VC-K 5.11.0
  - Gradle 9.2
  - TestBalloon 0.8.2
 

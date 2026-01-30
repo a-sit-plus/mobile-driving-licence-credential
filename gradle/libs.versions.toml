@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.3.0"
-vck = "5.10.0"
+vck = "5.11.0-SNAPSHOT"
 testballoon = "0.8.2-K2.3.0"
 testballoonAddons = "0.7.1"
 asp = "20260114"
