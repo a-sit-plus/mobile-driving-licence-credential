@@ -10,21 +10,11 @@ pluginManagement {
 }
 
 if (System.getProperty("regressionTest") == "true") {
-    includeBuild("../../vck/signum") {
-        dependencySubstitution {
-            substitute(module("at.asitplus.wallet:indispensable")).using(project(":indispensable"))
-            substitute(module("at.asitplus.signum:indispensable-josef")).using(project(":indispensable-josef"))
-            substitute(module("at.asitplus.signum:indispensable-cosef")).using(project(":indispensable-cosef"))
-            substitute(module("at.asitplus.signum:supreme")).using(project(":supreme"))
-        }
-    }
-    includeBuild("../../vck") {
-        dependencySubstitution {
-            substitute(module("at.asitplus.wallet:vck")).using(project(":vck"))
-            substitute(module("at.asitplus.wallet:vck-openid")).using(project(":vck-openid"))
-            substitute(module("at.asitplus.wallet:vck-openid-ktor")).using(project(":vck-openid-ktor"))
-            substitute(module("at.asitplus.wallet:openid-data-classes")).using(project(":openid-data-classes"))
-        }
+    val vckFile = file("../../vck/build.gradle.kts")
+    if (vckFile.exists()) {
+        logger.warn("Detected VC-K in ${vckFile.absolutePath}.")
+        logger.warn("Including VC-K as composite build.")
+        includeBuild("../../vck")
     }
 }
 
