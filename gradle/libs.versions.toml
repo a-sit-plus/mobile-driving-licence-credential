@@ -7,6 +7,9 @@ asp = "20260122"
 
 [libraries]
 vck = { module = "at.asitplus.wallet:vck", version.ref = "vck" }
-[plugins]
-asp = { id = "at.asitplus.gradle.conventions", version.ref = "asp" }
 
+[plugins]
+asitplus-gradle-conventions = { id = "at.asitplus.gradle.conventions", version.ref = "asp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+testballoon = { id = "de.infix.testBalloon", version.ref = "testballoon" }
