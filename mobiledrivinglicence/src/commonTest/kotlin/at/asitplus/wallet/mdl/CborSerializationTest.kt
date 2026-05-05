@@ -4,7 +4,6 @@ import at.asitplus.iso.*
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.Base16Strict
 import at.asitplus.signum.indispensable.cosef.io.coseCompliantSerializer
-import at.asitplus.testballoon.invoke
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.EXPIRY_DATE
@@ -26,9 +25,7 @@ import kotlin.time.Instant
 
 val CborSerializationTest by testSuite {
 
-
-
-    "mDL" {
+    test("mDL") {
         val mdl = MobileDrivingLicence(
             familyName = "Mustermann",
             givenName = "Max",
@@ -59,7 +56,7 @@ val CborSerializationTest by testSuite {
     }
 
     // From ISO/IEC 18013-5:2021(E), D4.1.1, page 115
-    "mdoc request" {
+    test("mdoc request") {
         /**
          * a2                                      # map(2)
          *    67                                   # text(7)
@@ -134,7 +131,7 @@ val CborSerializationTest by testSuite {
     }
 
     // From ISO/IEC 18013-5:2021(E), D4.1.2, page 116
-    "mdoc response" {
+    test("mdoc response") {
         /**
          * a3                                      # map(3)
          *    67                                   # text(7)
@@ -356,7 +353,7 @@ val CborSerializationTest by testSuite {
         coseCompliantSerializer.encodeToByteArray(deviceResponse).encodeToString(Base16Strict) shouldBe input
     }
 
-    "Driving Privilege" {
+    test("Driving Privilege") {
         val drivingPrivilege = DrivingPrivilege(
             vehicleCategoryCode = "A",
             issueDate = LocalDate.parse("2018-08-09"),
@@ -374,7 +371,7 @@ val CborSerializationTest by testSuite {
         serialized shouldContain "6578706972795" // "2024-10-20"
     }
 
-    "Driving Privilege Deserialization" {
+    test("Driving Privilege Deserialization") {
         val input = "a37576656869636c655f63617465676f72795f636f646561416a69737375655f64617465d903ec6a323031382d30382d" +
                 "30396b6578706972795f64617465d903ec6a323032342d31302d3230"
 
@@ -388,7 +385,7 @@ val CborSerializationTest by testSuite {
     }
 
 
-    "Date in IssuerSignedItem from ISO example" {
+    test("Date in IssuerSignedItem from ISO example") {
         val input = """
             a4686469676573744944036672616e646f6d5820b23f627e8999c706df0c0a4ed98ad74af988af619b4bb078b89058553f44615d7165
             6c656d656e744964656e7469666965726a69737375655f646174656c656c656d656e7456616c7565d903ec6a323031392d31302d3230
@@ -407,7 +404,7 @@ val CborSerializationTest by testSuite {
         serialized.encodeToString(Base16Strict).uppercase() shouldBe input
     }
 
-    "Driving Privilege in IssuerSignedItem from ISO example" {
+    test("Driving Privilege in IssuerSignedItem from ISO example") {
         /**
          * A4                                      # map(4)
          *    68                                   # text(8)
@@ -476,7 +473,7 @@ val CborSerializationTest by testSuite {
     }
 
     // From ISO/IEC 18013-5:2021(E), page 130
-    "IssuerAuth Deserialization" {
+    test("IssuerAuth Deserialization") {
         /**
          * In diagnostic notation:
          * [
@@ -625,5 +622,5 @@ private fun IssuerSignedList.findItem(digestId: UInt) =
     entries.first { it.value.digestId == digestId }.value
 
 
-private fun at.asitplus.iso.IssuerSignedItem.serialize(namespace: String): ByteArray =
+private fun IssuerSignedItem.serialize(namespace: String): ByteArray =
     coseCompliantSerializer.encodeToByteArray(IssuerSignedItemSerializer(namespace, elementIdentifier), this)

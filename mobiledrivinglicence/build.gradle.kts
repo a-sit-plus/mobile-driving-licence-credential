@@ -6,7 +6,11 @@ import at.asitplus.gradle.setupDokka
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.asitplus.gradle.conventions)
+    if (System.getProperty("regressionTest") == "true") {
+        id("maven-publish")
+    } else {
+        alias(libs.plugins.asitplus.gradle.conventions)
+    }
     id("org.jetbrains.dokka")
     id("signing")
     alias(libs.plugins.testballoon)
@@ -26,6 +30,12 @@ kotlin {
         commonMain {
             dependencies {
                 api(libs.vck)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(libs.testballoon)
+                implementation(kotest("assertions-core"))
             }
         }
     }

@@ -6,7 +6,6 @@ import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
 import at.asitplus.signum.indispensable.cosef.toCoseKey
-import at.asitplus.testballoon.invoke
 import at.asitplus.wallet.lib.agent.EphemeralKeyWithoutCert
 import at.asitplus.wallet.lib.cbor.CoseHeaderCertificate
 import at.asitplus.wallet.lib.cbor.SignCose
@@ -32,7 +31,7 @@ import kotlin.time.Clock
 
 val IsoMdocTest by testSuite {
 
-    "issue and store and present and verify" {
+    test("issue and store and present and verify") {
         val wallet = Wallet()
         val verifier = Verifier()
         val issuer = Issuer()

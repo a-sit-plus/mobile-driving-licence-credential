@@ -4,9 +4,6 @@ import at.asitplus.iso.*
 import at.asitplus.signum.indispensable.CryptoSignature
 import at.asitplus.signum.indispensable.cosef.*
 import at.asitplus.signum.indispensable.cosef.io.coseCompliantSerializer
-import at.asitplus.testballoon.invoke
-import at.asitplus.testballoon.minus
-import at.asitplus.testballoon.withData
 import at.asitplus.wallet.lib.agent.SubjectCredentialStore
 import at.asitplus.wallet.lib.data.CredentialToJsonConverter
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
@@ -70,24 +67,24 @@ import kotlin.time.Clock
 
 val SerializerRegistrationTest by testSuite {
 
+    test("Serialization and deserialization") {
+        dataMap().entries.forEach {
+            withClue("for ${it.key}") {
+                val item = it.toIssuerSignedItem()
+                val serialized = item.serialize(MobileDrivingLicenceScheme.isoNamespace)
 
-    "Serialization and deserialization" - {
-        withData(nameFn = { " for ${it.key}" }, dataMap().entries) {
-            val item = it.toIssuerSignedItem()
-            val serialized = item.serialize(MobileDrivingLicenceScheme.isoNamespace)
-
-            val deserialized = coseCompliantSerializer.decodeFromByteArray(
-                IssuerSignedItemSerializer(
-                    MobileDrivingLicenceScheme.isoNamespace,
-                    item.elementIdentifier
-                ), serialized
-            )
-
-            deserialized.elementValue shouldBe it.value
+                val deserialized = coseCompliantSerializer.decodeFromByteArray(
+                    IssuerSignedItemSerializer(
+                        MobileDrivingLicenceScheme.isoNamespace,
+                        item.elementIdentifier
+                    ), serialized
+                )
+                deserialized.elementValue shouldBe it.value
+            }
         }
     }
 
-    "Serialization to JSON Element" {
+    test("Serialization to JSON Element") {
 
         val mso = MobileSecurityObject(
             version = "1.0",

@@ -2,7 +2,6 @@ package at.asitplus.wallet.mdl
 
 import at.asitplus.iso.ServerResponse
 import at.asitplus.signum.indispensable.josef.JwsSigned
-import at.asitplus.testballoon.invoke
 import at.asitplus.wallet.lib.data.vckJsonSerializer
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DOCUMENT_NUMBER
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.DRIVING_PRIVILEGES
@@ -11,7 +10,6 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
 import de.infix.testBalloon.framework.core.testSuite
-import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -22,9 +20,8 @@ import kotlin.random.Random
 
 val JsonSerializationTest by testSuite {
 
-
     // from ISO/IEC 18013-5:2021(E), D4.2.1.1, page 120
-    "Server Request" {
+    test("Server Request") {
         val input = """
             {
               "version": "1.0",
@@ -60,7 +57,7 @@ val JsonSerializationTest by testSuite {
         itemRequests[PORTRAIT] shouldBe false
     }
 
-    "mDL as JSON" {
+    test("mDL as JSON") {
         val mdl = MobileDrivingLicence(
             familyName = "Mustermann",
             givenName = "Max",
@@ -87,7 +84,7 @@ val JsonSerializationTest by testSuite {
     }
 
     // from ISO/IEC 18013-5:2021(E), D4.2.1.2, page 121
-    "Server Response" {
+    test("Server Response") {
         /**
          * Payload in JWS is:
          * {
