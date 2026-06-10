@@ -6,7 +6,7 @@ import at.asitplus.signum.indispensable.cosef.CoseKey
 import at.asitplus.signum.indispensable.cosef.CoseSigned
 import at.asitplus.signum.indispensable.cosef.io.ByteStringWrapper
 import at.asitplus.signum.indispensable.cosef.toCoseKey
-import at.asitplus.testballoon.invoke
+import at.asitplus.testballoon.matrix.matrixSuite
 import at.asitplus.wallet.lib.agent.EphemeralKeyWithoutCert
 import at.asitplus.wallet.lib.cbor.CoseHeaderCertificate
 import at.asitplus.wallet.lib.cbor.SignCose
@@ -18,7 +18,6 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.FAMILY_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.GIVEN_NAME
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ISSUE_DATE
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.PORTRAIT
-import de.infix.testBalloon.framework.core.testSuite
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -30,7 +29,7 @@ import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlin.random.Random
 import kotlin.time.Clock
 
-val IsoMdocTest by testSuite {
+val IsoMdocTest by matrixSuite {
 
     "issue and store and present and verify" {
         val wallet = Wallet()

@@ -2,6 +2,7 @@ import at.asitplus.gradle.Logger
 import at.asitplus.gradle.kotest
 import at.asitplus.gradle.serialization
 import at.asitplus.gradle.setupDokka
+import at.asitplus.gradle.tbAddons
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -27,6 +28,9 @@ kotlin {
             dependencies {
                 api(libs.vck)
             }
+        }
+        commonTest.dependencies {
+            implementation(tbAddons("matrix")) //work around idea bug
         }
     }
 }
