@@ -5,10 +5,17 @@ import at.asitplus.gradle.setupDokka
 import at.asitplus.gradle.tbAddons
 
 plugins {
+    // No version here: in composite mode vck contributes this plugin from source at an
+    // "unknown version"; the version is supplied by settings.gradle.kts otherwise.
+    id("at.asitplus.gradle.conventions")
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.asitplus.gradle.conventions)
     id("org.jetbrains.dokka")
+    // maven-publish is applied transitively by the conventions plugin, but when that
+    // plugin is contributed by the vck composite build (at an "unknown version") Gradle
+    // can't introspect its transitive plugins to generate the `publishing` accessor.
+    // Listing it here makes accessor generation work in both composite and binary modes.
+    id("maven-publish")
     id("signing")
     alias(libs.plugins.testballoon)
 }

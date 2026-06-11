@@ -1,5 +1,5 @@
 plugins {
-    if (System.getProperty("regressionTest") != "true") alias(libs.plugins.asitplus.gradle.conventions)
+    id("at.asitplus.gradle.conventions")
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.testballoon) apply false
