@@ -4,9 +4,7 @@ import at.asitplus.iso.*
 import at.asitplus.signum.indispensable.CryptoSignature
 import at.asitplus.signum.indispensable.cosef.*
 import at.asitplus.signum.indispensable.cosef.io.coseCompliantSerializer
-import at.asitplus.testballoon.invoke
-import at.asitplus.testballoon.minus
-import at.asitplus.testballoon.withData
+import at.asitplus.testballoon.matrix.matrixSuite
 import at.asitplus.wallet.lib.agent.SubjectCredentialStore
 import at.asitplus.wallet.lib.data.CredentialToJsonConverter
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.ADMINISTRATIVE_NUMBER
@@ -55,7 +53,6 @@ import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.SEX
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.SIGNATURE_USUAL_MARK
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.UN_DISTINGUISHING_SIGN
 import at.asitplus.wallet.mdl.MobileDrivingLicenceDataElements.WEIGHT
-import de.infix.testBalloon.framework.core.testSuite
 import io.kotest.assertions.withClue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -68,11 +65,11 @@ import kotlin.random.Random
 import kotlin.random.nextUInt
 import kotlin.time.Clock
 
-val SerializerRegistrationTest by testSuite {
+val SerializerRegistrationTest by matrixSuite {
 
 
     "Serialization and deserialization" - {
-        withData(nameFn = { " for ${it.key}" }, dataMap().entries) {
+        data(dataMap().entries, nameFn = { _, it -> " for ${it.key}" }) test {
             val item = it.toIssuerSignedItem()
             val serialized = item.serialize(MobileDrivingLicenceScheme.isoNamespace)
 
